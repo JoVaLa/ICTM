@@ -1,5 +1,5 @@
 package serieus1;
-%test
+//test
 import java.util.ArrayList;
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
