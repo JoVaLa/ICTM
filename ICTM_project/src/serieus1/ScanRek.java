@@ -32,14 +32,6 @@ public class ScanRek implements Behavior{
 		
 	}
 	
-	
-	//EIGEN FUNCTIES
-	public void nextBox() {
-		this.Lift.rotate(360);;
-	}
-	
-	public void nextRow() {
-		
-	}
+
 
 }
