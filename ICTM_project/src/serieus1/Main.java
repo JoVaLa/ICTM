@@ -28,6 +28,7 @@ import lejos.utility.Delay;
 import lejos.robotics.subsumption.*;
 
 public class Main {
+	// test for github write some new code
 	static EV3LargeRegulatedMotor Drive=new EV3LargeRegulatedMotor(MotorPort.B);
 	static EV3LargeRegulatedMotor Lift=new EV3LargeRegulatedMotor(MotorPort.A);
 	static EV3LargeRegulatedMotor Grab=new EV3LargeRegulatedMotor(MotorPort.C);
