@@ -28,11 +28,13 @@ import lejos.utility.Delay;
 import lejos.robotics.subsumption.*;
 
 public class Main {
+	//test
 	static EV3LargeRegulatedMotor Drive=new EV3LargeRegulatedMotor(MotorPort.B);
 	static EV3LargeRegulatedMotor Lift=new EV3LargeRegulatedMotor(MotorPort.A);
 	static EV3LargeRegulatedMotor Grab=new EV3LargeRegulatedMotor(MotorPort.C);
 	static EV3ColorSensor color1=new EV3ColorSensor(SensorPort.S1);
-	static EV3UltrasonicSensor us1=new EV3UltrasonicSensor(SensorPort.S4);
+	static EV3UltrasonicSensor usWall=new EV3UltrasonicSensor(SensorPort.S4);
+	static EV3UltrasonicSensor usDump=new EV3UltrasonicSensor(SensorPort.S4);
 	
 	public static void main(String[]args)throws InterruptedException{
 		
@@ -41,16 +43,17 @@ public class Main {
 		
 		
 		
-		Behavior [] behaviors = new Behavior[7];
-		behaviors[0]= new ScanRek(color1, Lift, Grab);
-		behaviors[1]= new TakeBox(color1, Lift, Grab);
-		behaviors[2]= new DropBox(color1, Lift, Grab);
-//		behaviors[3]= new BringToRepository(color1, Lift, Grab, Drive, us1);
-//		behaviors[]= new GetFromRep
-//		behaviors[]= new FixError
-		behaviors[4]= new BringToRek(color1, Lift, Grab, Drive, us1);
-		behaviors[5]= new Dump(color1, Lift, Grab, Drive, us1);
-		behaviors[6]= new SeeHuman(color1,Drive);
+		Behavior [] behaviors = new Behavior[1];
+		behaviors[0]= new BringToRek(color1, Lift, Grab, Drive, usWall, usDump);
+//		behaviors[0]= new ScanRek(color1, Lift, Grab);
+//		behaviors[1]= new TakeBox(color1, Lift, Grab);
+//		behaviors[2]= new DropBox(color1, Lift, Grab);
+////		behaviors[3]= new BringToRepository(color1, Lift, Grab, Drive, us1);
+////		behaviors[]= new GetFromRep
+////		behaviors[]= new FixError
+//		behaviors[4]= new BringToRek(color1, Lift, Grab, Drive, usWall, usDump);
+//		behaviors[5]= new Dump(color1, Lift, Grab, Drive, usDump);
+//		behaviors[6]= new SeeHuman(color1,Drive);
 		
 		
 		Arbitrator a = new Arbitrator (behaviors);
