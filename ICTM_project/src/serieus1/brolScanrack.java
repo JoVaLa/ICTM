@@ -122,53 +122,53 @@ public class brolScanrack {
 //		double rotationLift=(0.23)*90/0.01;
 //		motorLift.rotate(-(int)rotationLift);
 //		
-		motorGrab.setSpeed(360);
-		double rotationGrab=(-0.02)*90/0.01;
-		motorGrab.rotate(-(int)rotationGrab);
-		
-		
-//		posFork.add(rack11); posFork.add(rack21);posFork.add(rack31);posFork.add(rack41);
-//		posFork.add(rack42); posFork.add(rack32);posFork.add(rack22);posFork.add(rack12);
-//		posFork.add(rack13); posFork.add(rack23);posFork.add(rack33);posFork.add(rack43);
-//		posFork.add(rack44); posFork.add(rack34);posFork.add(rack24);posFork.add(rack14);
-//		positionFork=new double[3];
-//		positionFork[0]=0.30;
-//		positionFork[1]=0.05;
-//		positionFork[1]=0.05;
-//
-//		goToInitialState();
-//		int i=0;
-//		while(i<15)
-//		{
-//			scanPos(i);
-//			moveFork(posFork.get(i).getCoordinates(),posFork.get(i+1).getCoordinates());
-//			i++;
-//		}
-//		// This moment the full rack is scanned, starting from the first shelf on the first row. The code below, could be written inside the while loop.
-//		// Then, we can for example break the while loop immediately when one column seems to be empty.
-//		// The code below will also be used to check if the class works
-//		// Idea if the movement of the motors is not accurate enough: use the color sensor to decide what the position of the robot is.
-//		int[] emptyOrMistake=new int[16];//0: right color, 1: empty, 2: wrong color 
-//		for(int j=0;j<16;j++)
-//		{
-//			if(posFork.get(j).getColorBlock()!=posFork.get(j).getColorShelf() && posFork.get(j).getColorBlock()!=5 )
-//			{
-//				emptyOrMistake[j]=2;
-//			}
-//			if(posFork.get(j).getColorBlock()==5)
-//			{
-//				emptyOrMistake[j]=1;
-//			}
-//			
-//		}
-//		while(Button.readButtons()==0) {
-//		for(int k=0;k<16;k++)
-//		{
-//			System.out.println(emptyOrMistake[k]);
-//		}
-//		}
-//		// conditions for this class to be called: the robot shouldn't have a box on its fork, it should not have an assignment to deliver a box
-//		// it is not very efficient to scan each time a box is placed in the warehouse --> it could be an idea to give the robot different assignements after scanning one time
+//		motorGrab.setSpeed(360);
+//		double rotationGrab=(-0.02)*90/0.01;
+//		motorGrab.rotate(-(int)rotationGrab);
 //		
+		
+		posFork.add(rack11); posFork.add(rack21);posFork.add(rack31);posFork.add(rack41);
+		posFork.add(rack42); posFork.add(rack32);posFork.add(rack22);posFork.add(rack12);
+		posFork.add(rack13); posFork.add(rack23);posFork.add(rack33);posFork.add(rack43);
+		posFork.add(rack44); posFork.add(rack34);posFork.add(rack24);posFork.add(rack14);
+		positionFork=new double[3];
+		positionFork[0]=0.30;
+		positionFork[1]=0.05;
+		positionFork[1]=0.05;
+
+		goToInitialState();
+		int i=0;
+		while(i<15)
+		{
+			scanPos(i);
+			moveFork(posFork.get(i).getCoordinates(),posFork.get(i+1).getCoordinates());
+			i++;
+		}
+		// This moment the full rack is scanned, starting from the first shelf on the first row. The code below, could be written inside the while loop.
+		// Then, we can for example break the while loop immediately when one column seems to be empty.
+		// The code below will also be used to check if the class works
+		// Idea if the movement of the motors is not accurate enough: use the color sensor to decide what the position of the robot is.
+		int[] emptyOrMistake=new int[16];//0: right color, 1: empty, 2: wrong color 
+		for(int j=0;j<16;j++)
+		{
+			if(posFork.get(j).getColorBlock()!=posFork.get(j).getColorShelf() && posFork.get(j).getColorBlock()!=5 )
+			{
+				emptyOrMistake[j]=2;
+			}
+			if(posFork.get(j).getColorBlock()==5)
+			{
+				emptyOrMistake[j]=1;
+			}
+			
+		}
+		while(Button.readButtons()==0) {
+		for(int k=0;k<16;k++)
+		{
+			System.out.println(emptyOrMistake[k]);
+		}
+		}
+		// conditions for this class to be called: the robot shouldn't have a box on its fork, it should not have an assignment to deliver a box
+		// it is not very efficient to scan each time a box is placed in the warehouse --> it could be an idea to give the robot different assignements after scanning one time
+		
 	}
 }

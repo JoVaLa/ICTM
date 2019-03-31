@@ -28,23 +28,26 @@ import lejos.utility.Delay;
 import lejos.robotics.subsumption.*;
 
 public class Main {
-	//test
-	static EV3LargeRegulatedMotor Drive=new EV3LargeRegulatedMotor(MotorPort.B);
-	static EV3LargeRegulatedMotor Lift=new EV3LargeRegulatedMotor(MotorPort.A);
-	static EV3LargeRegulatedMotor Grab=new EV3LargeRegulatedMotor(MotorPort.C);
-	static EV3ColorSensor color1=new EV3ColorSensor(SensorPort.S1);
-	static EV3UltrasonicSensor usWall=new EV3UltrasonicSensor(SensorPort.S4);
-	static EV3UltrasonicSensor usDump=new EV3UltrasonicSensor(SensorPort.S4);
 	
 	public static void main(String[]args)throws InterruptedException{
+		 EV3LargeRegulatedMotor Drive=new EV3LargeRegulatedMotor(MotorPort.B);
+		 Drive.setSpeed(80);
+		 EV3LargeRegulatedMotor Lift=new EV3LargeRegulatedMotor(MotorPort.A);
+		 Lift.setSpeed(20);
+		 EV3LargeRegulatedMotor Grab=new EV3LargeRegulatedMotor(MotorPort.C);
+		 Grab.setSpeed(10);
+		 EV3ColorSensor color1=new EV3ColorSensor(SensorPort.S1);
+		 EV3UltrasonicSensor usWall=new EV3UltrasonicSensor(SensorPort.S3);
+		 EV3UltrasonicSensor usDump=new EV3UltrasonicSensor(SensorPort.S4);
+		 boolean boxVast= false;
+		 boolean vakVol=false;
+		 Flags flags=new Flags(boxVast,vakVol);
+		 
 		
-//		Move move= new Move(null, 0, 0, 0, 0, false);
-//		maakMap map=new maakMap(0,0,0);
 		
-		
-		
-		Behavior [] behaviors = new Behavior[1];
-		behaviors[0]= new BringToRek(color1, Lift, Grab, Drive, usWall, usDump);
+		Behavior [] behaviors = new Behavior[2];
+		behaviors[0]= new BringToRack(flags,boxVast,color1, Lift, Grab, Drive, usWall, usDump);
+		behaviors[1]= new GoToRep(flags,vakVol,color1, Lift, Grab, Drive, usWall, usDump);
 //		behaviors[0]= new ScanRek(color1, Lift, Grab);
 //		behaviors[1]= new TakeBox(color1, Lift, Grab);
 //		behaviors[2]= new DropBox(color1, Lift, Grab);
@@ -61,6 +64,7 @@ public class Main {
 		LCD.drawString("duw op een knop om te starten", 1, 1);
 		Button.waitForAnyPress();
 		Thread.sleep(1000);
+		LCD.clear();
 		a.go();//let the fun begin
 	}
 
