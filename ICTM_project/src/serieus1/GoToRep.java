@@ -19,7 +19,7 @@ public class GoToRep implements Behavior{
 	boolean suppressed=false;
 	
 	private boolean boxVast;
-	private int colorRep=4;// 1: red, 2: green, 3: blue, 4: white, 5:nothing (black)
+	//private int colorRep=4;// 1: red, 2: green, 3: blue, 4: white, 5:nothing (black)
 	private boolean fromRep=true;
 	private boolean fromFix=false;
 	private double distanceWall=100;//continue meetwaarde
@@ -50,12 +50,12 @@ public class GoToRep implements Behavior{
 		return (!Main.flags.getVakVol() &&!Main.flags.getBoxVast());
 	}
 	public void action(){
-		
+		LCD.drawString("in GoToRep", 1, 1);
 		Main.Drive.setSpeed(80);
         while(this.getWallDist()>0.04 && this.getWallDist()>0.04 && !suppressed) {
         	
         	
-        	if(colorRep==1) {
+        	if(Main.colorRep==1) {
         		if((this.getWallDist()-distRtoWall)>range ) {
                 	Main.Drive.backward();
                 	
@@ -65,14 +65,13 @@ public class GoToRep implements Behavior{
                 }
                 else {
                 	Main.Drive.stop();
-                	LCD.drawString("gtr if1", 1, 1);
-                	//this.vakVol=false;                	
-                	this.boxVast=true;
-                	Main.flags.setBoxVast(true);
+                	LCD.drawString("gtr 11111", 1, 1);
+                	//this.vakVol=false;  
+                	Main.flags.setTakeBox(true);
                 	break;
                 }
         	}
-        	if (colorRep==2) {
+        	if (Main.colorRep==2) {
         		if((this.getWallDist()-distGtoWall)>range ) {
                 	Main.Drive.backward();
                 }
@@ -87,7 +86,7 @@ public class GoToRep implements Behavior{
                 	break;
                 }
         	}
-        	if (colorRep==3) {
+        	if (Main.colorRep==3) {
         		if((this.getWallDist()-distBtoWall)>range ) {
                 	Main.Drive.backward();
                 }
@@ -102,7 +101,7 @@ public class GoToRep implements Behavior{
                 	break;
                 }
         	}
-        	if (colorRep==4 ) {
+        	if (Main.colorRep==4 ) {
         		if((this.getWallDist()-distWtoWall)>range ) {
                 	Main.Drive.backward();
                 }

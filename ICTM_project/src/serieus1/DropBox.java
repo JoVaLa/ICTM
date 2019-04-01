@@ -16,7 +16,7 @@ public class DropBox implements Behavior {
 		public void action(){
 			Main.Grab.setSpeed(100);
 			Main.Lift.setSpeed(100);
-			Main.Lift.rotate(180);
+			//Main.Lift.rotate(-180);
 			Main.Grab.rotate(400);
 			Main.Lift.rotate(-180);
 			Main.Grab.rotate(-400);

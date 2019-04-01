@@ -40,43 +40,43 @@ public class BringToRack implements Behavior{
 	static double[] positionFork;
 	// red column
 	private static double[] shelf11= {0.2,0.05,0.05};
-	static BrolWarehouse rack11=new BrolWarehouse(shelf11,1,5);
+	static Warehouse rack11=new Warehouse(shelf11,1,5);
 	private static double[] shelf21= {0.2,0.05,0.1};
-	static BrolWarehouse rack21=new BrolWarehouse(shelf21,1,5);
+	static Warehouse rack21=new Warehouse(shelf21,1,5);
 	private static double[] shelf31= {0.2,0.05,0.15};
-	static BrolWarehouse rack31=new BrolWarehouse(shelf31,1,5);
+	static Warehouse rack31=new Warehouse(shelf31,1,5);
 	private static double[] shelf41= {0.2,0.05,0.2};
-	static BrolWarehouse rack41=new BrolWarehouse(shelf41,1,5);
+	static Warehouse rack41=new Warehouse(shelf41,1,5);
 	// green column
 	private static double[] shelf12= {0.3,0.05,0.05};
-	static BrolWarehouse rack12=new BrolWarehouse(shelf12,2,5);
+	static Warehouse rack12=new Warehouse(shelf12,2,5);
 	private static double[] shelf22= {0.3,0.05,0.1};
-	static BrolWarehouse rack22=new BrolWarehouse(shelf22,2,5);
+	static Warehouse rack22=new Warehouse(shelf22,2,5);
 	private static double[] shelf32= {0.3,0.05,0.15};
-	static BrolWarehouse rack32=new BrolWarehouse(shelf32,2,5);
+	static Warehouse rack32=new Warehouse(shelf32,2,5);
 	private static double[] shelf42= {0.3,0.05,0.2};
-	static BrolWarehouse rack42=new BrolWarehouse(shelf42,2,5);
+	static Warehouse rack42=new Warehouse(shelf42,2,5);
 	
 	// blue column
 	private static double[] shelf13= {0.4,0.05,0.05};
-	static BrolWarehouse rack13=new BrolWarehouse(shelf13,3,5);
+	static Warehouse rack13=new Warehouse(shelf13,3,5);
 	private static double[] shelf23= {0.4,0.05,0.1};
-	static BrolWarehouse rack23=new BrolWarehouse(shelf23,3,5);
+	static Warehouse rack23=new Warehouse(shelf23,3,5);
 	private static double[] shelf33= {0.4,0.05,0.15};
-	static BrolWarehouse rack33=new BrolWarehouse(shelf33,3,5);
+	static Warehouse rack33=new Warehouse(shelf33,3,5);
 	private static double[] shelf43= {0.4,0.05,0.2};
-	static BrolWarehouse rack43=new BrolWarehouse(shelf43,3,5);
+	static Warehouse rack43=new Warehouse(shelf43,3,5);
 	// white column
 	private static double[] shelf14= {0.5,0.05,0.05};
-	static BrolWarehouse rack14=new BrolWarehouse(shelf14,4,5);
+	static Warehouse rack14=new Warehouse(shelf14,4,5);
 	private static double[] shelf24= {0.5,0.05,0.1};
-	static BrolWarehouse rack24=new BrolWarehouse(shelf24,4,5);
+	static Warehouse rack24=new Warehouse(shelf24,4,5);
 	private static double[] shelf34= {0.5,0.05,0.15};
-	static BrolWarehouse rack34=new BrolWarehouse(shelf34,4,5);
+	static Warehouse rack34=new Warehouse(shelf34,4,5);
 	private static double[] shelf44= {0.5,0.05,0.2};
-	static BrolWarehouse rack44=new BrolWarehouse(shelf44,4,5);
+	static Warehouse rack44=new Warehouse(shelf44,4,5);
 	
-	static ArrayList<BrolWarehouse> posFork=new ArrayList<BrolWarehouse>(16);
+	static ArrayList<Warehouse> posFork=new ArrayList<Warehouse>(16);
 	boolean suppressed=false;
 	
 	public BringToRack(Flags flags,boolean boxVast,EV3ColorSensor c1, EV3LargeRegulatedMotor L, EV3LargeRegulatedMotor G,EV3LargeRegulatedMotor D, EV3UltrasonicSensor Uwall,EV3UltrasonicSensor Udump) {
@@ -93,7 +93,7 @@ public class BringToRack implements Behavior{
 		return Main.flags.getBoxVast();
 	}
 	public void action(){
-		LCD.drawString("volgende behavior  ", 1, 1);
+		LCD.drawString("in BringToRack", 1, 1);
 		Main.Drive.setSpeed(80);
         	
 //		positionFork=new double[3];
