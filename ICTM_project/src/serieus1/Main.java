@@ -43,7 +43,7 @@ public class Main {
 		 boolean vakVol=false;
 		 boolean dump = false;
 		 boolean dropBox = false;
-		 boolean takeBox;
+		 boolean takeBox = false;
 		 Flags flags=new Flags(boxVast,vakVol,dump,dropBox,takeBox);
 		 
 		
