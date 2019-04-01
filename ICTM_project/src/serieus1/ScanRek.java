@@ -108,7 +108,7 @@ public class ScanRek implements Behavior {
 						tellerR=0;
 						Main.colorRep=1;
 						Main.flags.setVakVol(false);
-						LCD.drawString("TEST", 1, 1);
+						LCD.drawString("TEST", 1, 1);//test
 						//suppressed=true;
 	
 					}
