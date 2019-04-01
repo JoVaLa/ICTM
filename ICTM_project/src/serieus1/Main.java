@@ -30,6 +30,7 @@ import lejos.robotics.subsumption.*;
 public class Main {
 		static int colorRep;
 	
+
 	
 	
 	
@@ -135,6 +136,8 @@ public class Main {
 	        double distanceWall = (float)sampleWall[0];
 	        return distanceWall;
 	        }
+
+	
 		 
 		public  double getDumpDist() {
 			SampleProvider spDump = Main.usDump.getDistanceMode();
