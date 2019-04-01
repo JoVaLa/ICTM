@@ -12,7 +12,7 @@ import lejos.robotics.subsumption.Behavior;
 
 
 public class BringToRack implements Behavior{
-	//private Flags flags;
+	//private Flags flags;kkk
 //	private  EV3ColorSensor color1;
 //	private  EV3LargeRegulatedMotor Lift;
 //	private  EV3LargeRegulatedMotor Grab;
