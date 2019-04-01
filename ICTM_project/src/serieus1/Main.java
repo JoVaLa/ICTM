@@ -41,7 +41,10 @@ public class Main {
 		 EV3UltrasonicSensor usDump=new EV3UltrasonicSensor(SensorPort.S4);
 		 boolean boxVast= false;
 		 boolean vakVol=false;
-		 Flags flags=new Flags(boxVast,vakVol);
+		 boolean dump = false;
+		 boolean dropBox = false;
+		 boolean takeBox;
+		 Flags flags=new Flags(boxVast,vakVol,dump,dropBox,takeBox);
 		 
 		
 		
