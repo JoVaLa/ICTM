@@ -134,7 +134,7 @@ public class brolScanrack {
 		positionFork=new double[3];
 		positionFork[0]=0.30;
 		positionFork[1]=0.05;
-		positionFork[1]=0.05;
+		positionFork[2]=0.05;
 
 		goToInitialState();
 		int i=0;

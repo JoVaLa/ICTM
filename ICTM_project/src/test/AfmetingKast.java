@@ -15,7 +15,7 @@ public class AfmetingKast {
 		
 	public static void main(String[] args){
 		motorLift.setSpeed(720);
-		double rotationLift=(-0.07)*90/0.01;
+		double rotationLift=(-0.10)*90/0.01;
 		motorLift.rotate(-(int)rotationLift);
 	}
 		

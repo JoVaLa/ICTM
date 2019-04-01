@@ -12,14 +12,14 @@ import lejos.robotics.subsumption.Behavior;
 
 
 public class BringToRack implements Behavior{
-	private Flags flags;
-	private  EV3ColorSensor color1;
-	private  EV3LargeRegulatedMotor Lift;
-	private  EV3LargeRegulatedMotor Grab;
-	private  EV3LargeRegulatedMotor Drive;
-	private  EV3UltrasonicSensor usWall;
-	private  EV3UltrasonicSensor usDump;
-	public boolean boxVast;
+	//private Flags flags;
+//	private  EV3ColorSensor color1;
+//	private  EV3LargeRegulatedMotor Lift;
+//	private  EV3LargeRegulatedMotor Grab;
+//	private  EV3LargeRegulatedMotor Drive;
+//	private  EV3UltrasonicSensor usWall;
+//	private  EV3UltrasonicSensor usDump;
+//	public boolean boxVast;
 	
 	
 	public boolean vakVol=true;
@@ -77,61 +77,56 @@ public class BringToRack implements Behavior{
 	static BrolWarehouse rack44=new BrolWarehouse(shelf44,4,5);
 	
 	static ArrayList<BrolWarehouse> posFork=new ArrayList<BrolWarehouse>(16);
+	boolean suppressed=false;
 	
 	public BringToRack(Flags flags,boolean boxVast,EV3ColorSensor c1, EV3LargeRegulatedMotor L, EV3LargeRegulatedMotor G,EV3LargeRegulatedMotor D, EV3UltrasonicSensor Uwall,EV3UltrasonicSensor Udump) {
-		this.color1=c1;
-		this.Lift=L;
-		this.Grab=G;
-		this.Drive=D;
-		this.usWall=Uwall;
-		this.usDump=Udump;
-		this.boxVast=boxVast;
-		this.flags=flags;
+		Main.color1=c1;
+		Main.Lift=L;
+		Main.Grab=G;
+		Main.Drive=D;
+		Main.usWall=Uwall;
+		Main.usDump=Udump;
+		Main.boxVast=boxVast;
+		Main.flags=flags;
 	}
 	public boolean takeControl(){
-		return flags.getBoxVast();
+		return Main.flags.getBoxVast();
 	}
 	public void action(){
-		
-		this.Drive.setSpeed(80);
-        while(this.getWallDist()>0.04 && this.getDumpDist()>0.04) {
-        	LCD.drawString("Pos"+(this.getDumpDist()-startPos), 1, 1);
-        	if((this.getDumpDist()-startPos)>range ) {
-            	this.Drive.forward();
-            	
-            }
-        	else if((this.getDumpDist()-startPos)<0 ) {
-            	this.Drive.backward();
-            	
-            }
-            else {
-            	this.Drive.stop();
-            	
-            }
+		LCD.drawString("volgende behavior  ", 1, 1);
+		Main.Drive.setSpeed(80);
         	
-        	
-        	
-        	posFork.add(rack11); posFork.add(rack21);posFork.add(rack31);posFork.add(rack41);
-    		posFork.add(rack42); posFork.add(rack32);posFork.add(rack22);posFork.add(rack12);
-    		posFork.add(rack13); posFork.add(rack23);posFork.add(rack33);posFork.add(rack43);
-    		posFork.add(rack44); posFork.add(rack34);posFork.add(rack24);posFork.add(rack14);
+//		positionFork=new double[3];
+//		positionFork[0]=0.30;
+//		positionFork[1]=0.05;
+//		positionFork[2]=0.05;
+    	
+    	posFork.add(rack11); posFork.add(rack21);posFork.add(rack31);posFork.add(rack41);
+		posFork.add(rack42); posFork.add(rack32);posFork.add(rack22);posFork.add(rack12);
+		posFork.add(rack13); posFork.add(rack23);posFork.add(rack33);posFork.add(rack43);
+		posFork.add(rack44); posFork.add(rack34);posFork.add(rack24);posFork.add(rack14);
 //    		positionFork=new double[3];
 //    		positionFork[0]=0.30;
 //    		positionFork[1]=0.05;
 //    		positionFork[2]=0.05;
 
-    		goToInitialState();
-    		moveFork(posFork.get(0).getCoordinates(),posFork.get(6).getCoordinates()); 
-    		boxVast=false;
-    		vakVol=true;
+		//this.goToInitialState();
+		this.goToDumpDist(0.1);
+		this.moveFork(posFork.get(0).getCoordinates(),posFork.get(6).getCoordinates()); 
+		Main.flags.setDropBox(true);
+		Main.boxVast=false;
+		Main.flags.setBoxVast(false);
+		Main.vakVol=true;
+		Main.flags.setVakVol(true);
         }
 		
 //		
 		
-	}
+	//}
 	//uitstap
 	public void suppress(){
-		this.suppress();
+		//this.suppress();
+		suppressed=true;
 		
 	}
 	
@@ -140,21 +135,7 @@ public class BringToRack implements Behavior{
 //		
 //	}
 //	
-	 public  double getWallDist() {
-		 	SampleProvider spWall = this.usWall.getDistanceMode();
-	     	float [] sampleWall = new float[spWall.sampleSize()];
-	        spWall.fetchSample(sampleWall, 0);
-	        double distanceWall = (float)sampleWall[0];
-	        return distanceWall;
-	  }
-		 
-	 public  double getDumpDist() {
-			SampleProvider spDump = this.usDump.getDistanceMode();
-			float [] sampleDump = new float[spDump.sampleSize()];
-	        spDump.fetchSample(sampleDump, 0);
-	        double distanceDump = (float)sampleDump[0];
-		    return distanceDump;
-	 }
+
 	 
 	 public  void moveFork(double[] posOld,double[] posNew)
 		{
@@ -166,22 +147,69 @@ public class BringToRack implements Behavior{
 			// measure the conversion from degrees to height! Now I chose a hypothetical conversion of 5 cm per 360 degree for driving and 1 cm per 360 degrees for lifting
 			double rotationDrive=(posXnew-posXold)*90/0.05;
 			double rotationLift=(posZnew-posZold)*90/0.01;
-			this.Drive.setSpeed(360);
-			this.Lift.setSpeed(720);
-			this.Drive.rotate(-(int)rotationDrive);
-			this.Lift.rotate(-(int)rotationLift);
-			positionFork[0]=posXnew;
-			positionFork[2]=posZnew;
+			LCD.drawInt((int)rotationLift, 1, 1);
+			Main.Drive.setSpeed(100);
+			Main.Lift.setSpeed(720);
+			Main.Drive.rotate(-(int)rotationDrive);
+			Main.Lift.rotate(-(int)rotationLift);
+//			positionFork[0]=posXnew;
+//			positionFork[2]=posZnew;
 		}
 		public  void goToInitialState()
 		{
-			this.Drive.setSpeed(100);
-			this.Lift.setSpeed(200);
+			Main.Drive.setSpeed(100);
+			Main.Lift.setSpeed(200);
 			double rotationDrive=(rack11.coordinates[0]-positionFork[0])*360/0.05;
 			double rotationLift=(rack11.coordinates[2]-positionFork[2])*360/0.01;
-			positionFork[0]=rack11.coordinates[0];
-			positionFork[2]=rack11.coordinates[2];
+//			positionFork[0]=rack11.coordinates[0];
+//			positionFork[2]=rack11.coordinates[2];
 		}
+		
+		
+		public void goToDumpDist(double afst) {
+			while((this.getDumpDist()-afst)>Main.range ) {
+	        	Main.Drive.forward();
+	        }
+	    	while((this.getDumpDist()-afst)<0 ) {
+	        	Main.Drive.backward();
+	        }
+	        {
+	        	Main.Drive.stop();
+	        	//this.vakVol=false;
+	        	
+	        	
+	        }
+		}
+		public void goToWallDist(double afst) {
+			while((this.getWallDist()-afst)>Main.range ) {
+	        	Main.Drive.backward();
+	        }
+	    	while((this.getWallDist()-afst)<0 ) {
+	        	Main.Drive.forward();
+	        }
+	        {
+	        	Main.Drive.stop();
+	        	//this.vakVol=false;
+	        	
+	        	
+	        }
+		}
+		public  double getWallDist() {
+		 	SampleProvider spWall = Main.usWall.getDistanceMode();
+	     	float [] sampleWall = new float[spWall.sampleSize()];
+	        spWall.fetchSample(sampleWall, 0);
+	        double distanceWall = (float)sampleWall[0];
+	        return distanceWall;
+	        }
+		 
+		public  double getDumpDist() {
+			SampleProvider spDump = Main.usDump.getDistanceMode();
+			float [] sampleDump = new float[spDump.sampleSize()];
+	        spDump.fetchSample(sampleDump, 0);
+	        double distanceDump = (float)sampleDump[0];
+		    return distanceDump;
+		    }
+		
 	 
 	 
 //	

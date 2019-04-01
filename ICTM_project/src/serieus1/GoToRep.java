@@ -8,15 +8,15 @@ import lejos.robotics.SampleProvider;
 import lejos.robotics.subsumption.Behavior;
 
 public class GoToRep implements Behavior{
-	private Flags flags;
-	private  EV3ColorSensor color1;
-	private  EV3LargeRegulatedMotor Lift;
-	private  EV3LargeRegulatedMotor Grab;
-	private  EV3LargeRegulatedMotor Drive;
-	private  EV3UltrasonicSensor usWall;
-	private  EV3UltrasonicSensor usDump;
-	private boolean vakVol;//GEEN PUBLIC GEBRUIKEN WEL PRIVATE EN DAN VIA CONSTRUCTOR VAN ANDERE KLASSE ERAAN GERAKEN
-	
+//	private Flags flags;
+//	private  EV3ColorSensor color1;
+//	private  EV3LargeRegulatedMotor Lift;
+//	private  EV3LargeRegulatedMotor Grab;
+//	private  EV3LargeRegulatedMotor Drive;
+//	private  EV3UltrasonicSensor usWall;
+//	private  EV3UltrasonicSensor usDump;
+//	private boolean vakVol;//GEEN PUBLIC GEBRUIKEN WEL PRIVATE EN DAN VIA CONSTRUCTOR VAN ANDERE KLASSE ERAAN GERAKEN
+	boolean suppressed=false;
 	
 	private boolean boxVast;
 	private int colorRep=4;// 1: red, 2: green, 3: blue, 4: white, 5:nothing (black)
@@ -35,80 +35,95 @@ public class GoToRep implements Behavior{
 
 	
 	public GoToRep(Flags flags, boolean vV,EV3ColorSensor c1, EV3LargeRegulatedMotor L, EV3LargeRegulatedMotor G,EV3LargeRegulatedMotor D, EV3UltrasonicSensor Uwall,EV3UltrasonicSensor Udump) {
-		this.color1=c1;
-		this.Lift=L;
-		this.Grab=G;
-		this.Drive=D;
-		this.usWall=Uwall;
-		this.usDump=Udump;
-		this.vakVol=vV;
-		this.flags=flags;
+		Main.color1=c1;
+		Main.Lift=L;
+		Main.Grab=G;
+		Main.Drive=D;
+		Main.usWall=Uwall;
+		Main.usDump=Udump;
+		Main.vakVol=vV;
+		Main.flags=flags;
 		
 	}
 	
 	public boolean takeControl(){
-		return (!flags.getVakVol() &&!flags.getBoxVast());
+		return (!Main.flags.getVakVol() &&!Main.flags.getBoxVast());
 	}
 	public void action(){
 		
-		this.Drive.setSpeed(80);
-        while(this.getWallDist()>0.04 && this.getWallDist()>0.04) {
+		Main.Drive.setSpeed(80);
+        while(this.getWallDist()>0.04 && this.getWallDist()>0.04 && !suppressed) {
         	
         	
-        	if (colorRep==1) {
+        	if(colorRep==1) {
         		if((this.getWallDist()-distRtoWall)>range ) {
-                	this.Drive.backward();
-                }
-            	else if((this.getWallDist()-distRtoWall)<0 ) {
-                	this.Drive.forward();
-                }
-                else {
-                	this.Drive.stop();
-                	//this.vakVol=false;                	
-                	this.boxVast=true;
+                	Main.Drive.backward();
                 	
                 }
+            	else if((this.getWallDist()-distRtoWall)<0 ) {
+                	Main.Drive.forward();
+                }
+                else {
+                	Main.Drive.stop();
+                	LCD.drawString("gtr if1", 1, 1);
+                	//this.vakVol=false;                	
+                	this.boxVast=true;
+                	Main.flags.setBoxVast(true);
+                	break;
+                }
         	}
-        	else if (colorRep==2) {
+        	if (colorRep==2) {
         		if((this.getWallDist()-distGtoWall)>range ) {
-                	this.Drive.backward();
+                	Main.Drive.backward();
                 }
             	else if((this.getWallDist()-distGtoWall)<0 ) {
-                	this.Drive.forward();
+                	Main.Drive.forward();
                 }
                 else {
-                	this.Drive.stop();
+                	Main.Drive.stop();
                 	//this.vakVol=false;
                 	boxVast=true;
+                	Main.flags.setBoxVast(true);
+                	break;
                 }
         	}
-        	else if (colorRep==3) {
+        	if (colorRep==3) {
         		if((this.getWallDist()-distBtoWall)>range ) {
-                	this.Drive.backward();
+                	Main.Drive.backward();
                 }
             	else if((this.getWallDist()-distBtoWall)<0 ) {
-                	this.Drive.forward();
+                	Main.Drive.forward();
                 }
                 else {
-                	this.Drive.stop();
+                	Main.Drive.stop();
                 	//this.vakVol=false;
                 	boxVast=true;
+                	Main.flags.setBoxVast(true);
+                	break;
                 }
         	}
-        	else if (colorRep==4) {
+        	if (colorRep==4 ) {
         		if((this.getWallDist()-distWtoWall)>range ) {
-                	this.Drive.backward();
+                	Main.Drive.backward();
                 }
             	else if((this.getWallDist()-distWtoWall)<0 ) {
-                	this.Drive.forward();
+                	Main.Drive.forward();
                 }
                 else {
-                	this.Drive.stop();
+                	Main.Drive.stop();
                 	//this.vakVol=false;
+                	//LCD.drawString("geen kleur om te halen", 1, 1);
                 	boxVast=true;
+                	
+                	Main.flags.setTakeBox(true);
+                	LCD.drawString("raus "+Main.flags.getBoxVast(), 1, 1);
+                	//suppressed=true;
+                	Main.flags.setBoxVast(true);
+                	break;
                 }
+        		break;
         	}
-        	else LCD.drawString("geen kleur om te halen", 1, 1);
+        	
         	
         	
         }
@@ -118,12 +133,13 @@ public class GoToRep implements Behavior{
 	}
 	
 	public void suppress(){
-		this.suppress();
+		//this.suppress();
+		 suppressed=true;
 		
 	}
 
 	 public  double getWallDist() {
-		 	SampleProvider spWall = this.usWall.getDistanceMode();
+		 	SampleProvider spWall = Main.usWall.getDistanceMode();
 	     	float [] sampleWall = new float[spWall.sampleSize()];
 	        spWall.fetchSample(sampleWall, 0);
 	        double distanceWall = (float)sampleWall[0];
@@ -131,7 +147,7 @@ public class GoToRep implements Behavior{
 	        }
 		 
 	 public  double getDumpDist() {
-			SampleProvider spDump = this.usDump.getDistanceMode();
+			SampleProvider spDump = Main.usDump.getDistanceMode();
 			float [] sampleDump = new float[spDump.sampleSize()];
 	        spDump.fetchSample(sampleDump, 0);
 	        double distanceDump = (float)sampleDump[0];
