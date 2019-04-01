@@ -3,9 +3,16 @@ package serieus1;
 public class Flags {
 	public boolean boxVast;
 	public boolean vakVol;
-	public Flags(boolean bv,boolean vv) {
+	public boolean dumb;
+	public boolean dropBox;
+	public boolean takeBox;
+	
+	public Flags(boolean bv,boolean vv, boolean d, boolean db, boolean tb) {
 		this.boxVast=bv;
 		this.vakVol=vv;
+		this.dumb = d;
+		this.dropBox = db;
+		this.takeBox = tb;
 	}
 
 	public static void main(String[] args) {
@@ -28,6 +35,27 @@ public class Flags {
 	{
 		return vakVol;
 	}
+	public void setDumb (boolean a){
+		dumb = a;
+	}
+	public boolean getDumb (){
+		return dumb;
+	}
+	public void setDropBox (boolean a){
+			dropBox = a;
+	}
+	public boolean getDropBox()
+	{
+		return dropBox;
+	}
+	public void setTakeBox (boolean a){
+		takeBox = a;
+	}
+	public boolean getTakeBox()
+	{
+	return takeBox;
+	}
+	
 }
 
 
