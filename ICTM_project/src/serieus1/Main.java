@@ -154,7 +154,7 @@ public class Main {
 		posFork.add(rack13); posFork.add(rack23);posFork.add(rack33);posFork.add(rack43);
 		posFork.add(rack44); posFork.add(rack34);posFork.add(rack24);posFork.add(rack14);
 		
-		Behavior [] behaviors = new Behavior[5];
+		Behavior [] behaviors = new Behavior[5]; //test
 		behaviors[0]= new ScanRek();
 		behaviors[1]= new BringToRack(flags,boxVast,color1, Lift, Grab, Drive, usWall, usDump);
 		behaviors[2]= new GoToRep(flags,vakVol,color1, Lift, Grab, Drive, usWall, usDump);
