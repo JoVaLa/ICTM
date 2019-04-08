@@ -28,10 +28,10 @@ public class GoToRep implements Behavior{
 	private double beginPos = 0;//positie waar 'BringtoRek' is opgeroepen
 	private double startPos=0.3;//vaste afstand van dump tot startpositie rek (vakje 1 vd 16)
 	private double range=0.02;
-	private double distRtoWall=.300;//angle ingeven
-	private double distGtoWall=.250;
-	private double distBtoWall=.200;
-	private double distWtoWall=.150;
+	private double distRtoWall=.15;//angle ingeven
+	private double distGtoWall=.12;
+	private double distBtoWall=.09;
+	private double distWtoWall=.06;
 
 	
 	public GoToRep(Flags flags, boolean vV,EV3ColorSensor c1, EV3LargeRegulatedMotor L, EV3LargeRegulatedMotor G,EV3LargeRegulatedMotor D, EV3UltrasonicSensor Uwall,EV3UltrasonicSensor Udump) {
@@ -49,8 +49,11 @@ public class GoToRep implements Behavior{
 	public boolean takeControl(){
 		return (!Main.flags.getVakVol() &&!Main.flags.getBoxVast());
 	}
+
 	public void action(){
 		LCD.drawString("in GoToRep", 1, 1);
+		double[] onderKol={Main.positionFork[0],0,0};
+		Main.moveFork(Main.positionFork, onderKol);
 		Main.Drive.setSpeed(80);
         while(this.getWallDist()>0.04 && this.getWallDist()>0.04 && !suppressed) {
         	
@@ -68,6 +71,7 @@ public class GoToRep implements Behavior{
                 	LCD.drawString("gtr 11111", 1, 1);
                 	//this.vakVol=false;  
                 	Main.flags.setTakeBox(true);
+                	
                 	break;
                 }
         	}

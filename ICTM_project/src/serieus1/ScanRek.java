@@ -75,6 +75,7 @@ public class ScanRek implements Behavior {
 	}
 	
 	public void action() {
+		suppressed=false;
 		int tellerR=0;
 		int tellerG=0;
 		int tellerB=0;
@@ -83,23 +84,32 @@ public class ScanRek implements Behavior {
 		boolean columnG=false;
 		boolean columnB=false;
 		boolean columnW=false;
-		goToInitialState();
+		//goToInitialState();
+		Main.Drive.setSpeed(100);
+		LCD.drawString("in scanrek", 1, 1);
+		//Main.moveFork(Main.positionFork, Main.posFork.get(0).getCoordinates());//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		Main.goToDumpDist(0.2);
+		LCD.drawString("net voor while", 1, 3);
 		int i=0;
 		while(i<=15 && !suppressed) // additional conditions e.g. stop if an emty row is discovered)
 		{
 			scanPos(i);
 			Delay.msDelay(500);
-			if(i<15) {
-			moveFork(Main.posFork.get(i).getCoordinates(),Main.posFork.get(i+1).getCoordinates());
-			}
+			
 			int[] emptyOrMistake=new int[16];
 			if(Main.posFork.get(i).getColorBlock()!=Main.posFork.get(i).getColorShelf() && Main.posFork.get(i).getColorBlock()!=5 )//FOUT
 			{
+				LCD.drawString("FOUT GEDETECTEERD", 1, 1);
 				emptyOrMistake[i]=2;
+				Main.Lift.rotate(250);//MOET NOG GEKALIBREERD WORDEN
+				Main.flags.setTakeBox(true);
+				Main.flags.setDump(true);
+				LCD.clear();
 				
 			}
 			if(Main.posFork.get(i).getColorBlock()==5)//LEEG
 			{
+				LCD.drawString("LEEG", 1, 1);
 				emptyOrMistake[i]=1;
 				if(i<=3) {
 					tellerR++;
@@ -142,6 +152,9 @@ public class ScanRek implements Behavior {
 				}
 				
 			}
+			if(i<15) {
+				moveFork(Main.posFork.get(i).getCoordinates(),Main.posFork.get(i+1).getCoordinates());
+				}
 			i++;
 		}
 		

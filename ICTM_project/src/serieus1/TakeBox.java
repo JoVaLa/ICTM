@@ -13,15 +13,18 @@ public class TakeBox implements Behavior{
 				return (Main.flags.getTakeBox() && !Main.flags.getBoxVast());
 				//return true;
 	}
+
 	//handeling
 	public void action(){
 		Main.Grab.setSpeed(100);
 		Main.Lift.setSpeed(100);
 		Main.Grab.rotate(400);
-		Main.Lift.rotate(180);
+		Main.Lift.rotate(-180);
 		Main.Grab.rotate(-400);
+		Main.Lift.rotate(180);
 		//Main.Lift.rotate(-180); //om geen hoogteverschil te hebben met beginpositie
 		Main.flags.setBoxVast(true);
+		Main.flags.setTakeBox(false);
 	}
 	//uitstap
 	public void suppress(){

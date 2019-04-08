@@ -89,6 +89,7 @@ public class BringToRack implements Behavior{
 		Main.boxVast=boxVast;
 		Main.flags=flags;
 	}
+
 	public boolean takeControl(){
 		return Main.flags.getBoxVast();
 	}
@@ -111,13 +112,13 @@ public class BringToRack implements Behavior{
 //    		positionFork[2]=0.05;
 
 		//this.goToInitialState();
-		this.goToDumpDist(0.1);
-		this.moveFork(posFork.get(0).getCoordinates(),posFork.get(6).getCoordinates()); 
+		Main.goToDumpDist(0.1);
+		Main.moveFork(posFork.get(0).getCoordinates(),posFork.get(6).getCoordinates()); 
 		Main.flags.setDropBox(true);
-		Main.boxVast=false;
-		Main.flags.setBoxVast(false);
-		Main.vakVol=true;
-		Main.flags.setVakVol(true);
+//		Main.boxVast=false;
+//		Main.flags.setBoxVast(false);
+//		Main.vakVol=true;
+//		Main.flags.setVakVol(true);
         }
 		
 //		

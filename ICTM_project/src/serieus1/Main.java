@@ -100,12 +100,31 @@ public class Main {
 			
 		}
 		
+		public static void moveFork(double[] posOld,double[] posNew)
+		{
+			LCD.drawString("in movefork", 1, 1);
+			double posXold=posOld[0];
+			double posZold=posOld[2];
+			double posXnew=posNew[0];
+			double posZnew=posNew[2];
+			// change x-position
+			// measure the conversion from degrees to height! Now I chose a hypothetical conversion of 5 cm per 360 degree for driving and 1 cm per 360 degrees for lifting
+			double rotationDrive=(posXnew-posXold)*50/0.05;
+			double rotationLift=(posZnew-posZold)*100/0.01;
+			Main.Drive.setSpeed(100);
+			Main.Lift.setSpeed(100);
+			Main.Drive.rotate(-(int)rotationDrive);
+			Main.Lift.rotate(-(int)rotationLift);
+			Main.makeUpdate(0,posXnew);
+			Main.makeUpdate(2,posZnew);
+			//LCD.clear();
+		}
 		
-		public void goToDumpDist(double afst) {
-			while((this.getDumpDist()-afst)>Main.range ) {
+		public static void goToDumpDist(double afst) {
+			while((getDumpDist()-afst)>Main.range ) {
 	        	Main.Drive.forward();
 	        }
-	    	while((this.getDumpDist()-afst)<0 ) {
+	    	while((getDumpDist()-afst)<0 ) {
 	        	Main.Drive.backward();
 	        }
 	        {
@@ -115,11 +134,11 @@ public class Main {
 	        	
 	        }
 		}
-		public void goToWallDist(double afst) {
-			while((this.getWallDist()-afst)>Main.range ) {
+		public static void goToWallDist(double afst) {
+			while((getWallDist()-afst)>Main.range ) {
 	        	Main.Drive.backward();
 	        }
-	    	while((this.getWallDist()-afst)<0 ) {
+	    	while((getWallDist()-afst)<0 ) {
 	        	Main.Drive.forward();
 	        }
 	        {
@@ -129,7 +148,7 @@ public class Main {
 	        	
 	        }
 		}
-		public  double getWallDist() {
+		public static double getWallDist() {
 		 	SampleProvider spWall = Main.usWall.getDistanceMode();
 	     	float [] sampleWall = new float[spWall.sampleSize()];
 	        spWall.fetchSample(sampleWall, 0);
@@ -139,7 +158,7 @@ public class Main {
 
 	
 		 
-		public  double getDumpDist() {
+		public static double getDumpDist() {
 			SampleProvider spDump = Main.usDump.getDistanceMode();
 			float [] sampleDump = new float[spDump.sampleSize()];
 	        spDump.fetchSample(sampleDump, 0);
@@ -147,24 +166,38 @@ public class Main {
 		    return distanceDump;
 		    }
 		
+		public static void goToInitialState()
+		{
+			Main.Drive.setSpeed(100);
+			Main.Lift.setSpeed(100);
+			double rotationDrive=(Main.rack11.coordinates[0]-Main.positionFork[0])*10/0.05;
+			double rotationLift=(Main.rack11.coordinates[2]-Main.positionFork[2])*100/0.01;
+			Main.Drive.rotate(-(int)rotationDrive);
+			Main.Lift.rotate(-(int)rotationLift);
+			Main.makeUpdate(0,Main.rack11.coordinates[0]);
+			Main.makeUpdate(2,Main.rack11.coordinates[2]);
+		}
+		
 		
 		
 	public static void main(String[]args)throws InterruptedException{
 		
-		 
+		positionFork[2]=0;
+		goToDumpDist(0.2);
+		positionFork[0]=0.2;
 		posFork.add(rack11); posFork.add(rack21);posFork.add(rack31);posFork.add(rack41);
 		posFork.add(rack42); posFork.add(rack32);posFork.add(rack22);posFork.add(rack12);
 		posFork.add(rack13); posFork.add(rack23);posFork.add(rack33);posFork.add(rack43);
 		posFork.add(rack44); posFork.add(rack34);posFork.add(rack24);posFork.add(rack14);
 		
-		Behavior [] behaviors = new Behavior[5]; //test
+		Behavior [] behaviors = new Behavior[6]; //test
 		behaviors[0]= new ScanRek();
 		behaviors[1]= new BringToRack(flags,boxVast,color1, Lift, Grab, Drive, usWall, usDump);
 		behaviors[2]= new GoToRep(flags,vakVol,color1, Lift, Grab, Drive, usWall, usDump);
+		behaviors[3]= new Dump();
+		behaviors[4]= new TakeBox();
+		behaviors[5]= new DropBox();
 		
-		
-		behaviors[3]= new TakeBox();
-		behaviors[4]= new DropBox();
 		//behaviors[2]= new ScanRek();
 ////		behaviors[3]= new BringToRepository(color1, Lift, Grab, Drive, us1);
 ////		behaviors[]= new GetFromRep
@@ -175,10 +208,10 @@ public class Main {
 		
 		
 		Arbitrator a = new Arbitrator (behaviors);
-		LCD.clear();
+		LCD.clearDisplay();
 		LCD.drawString("duw op een knop om te starten", 1, 1);
-		Button.waitForAnyPress();
-		Thread.sleep(1000);
+		//Button.waitForAnyPress();
+		//Thread.sleep(1000);
 		LCD.clear();
 		a.go();//let the fun begin
 	}

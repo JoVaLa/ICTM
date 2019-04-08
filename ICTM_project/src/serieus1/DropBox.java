@@ -18,9 +18,19 @@ public class DropBox implements Behavior {
 			Main.Lift.setSpeed(100);
 			//Main.Lift.rotate(-180);
 			Main.Grab.rotate(400);
-			Main.Lift.rotate(-180);
+			Main.Lift.rotate(180);
 			Main.Grab.rotate(-400);
+			Main.Lift.rotate(-180);
+			if(Main.flags.getDumb()==true) {
+				Main.flags.setDump(false);
+			}
+			else if(Main.flags.getVakVol()==false) {
+				Main.flags.setVakVol(true);
+			}
 			Main.flags.setBoxVast(false);
+			Main.flags.setDropBox(false);
+			
+			
 			
 		}
 		//uitstap
