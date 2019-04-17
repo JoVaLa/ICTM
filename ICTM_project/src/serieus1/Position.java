@@ -49,7 +49,7 @@ public class Position extends Thread {
 			
 			if(positionLeft<0.35)
 			{
-				Main.makeUpdate(0,positionLeft);
+				Main.makeUpdate(0,positionLeft-0.05);
 			}
 			else
 			{

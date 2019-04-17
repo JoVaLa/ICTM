@@ -28,6 +28,7 @@ public class Dump implements Behavior{
 		Main.goToInitialState();
 		Main.goToDumpDist(0.1);
 		Main.flags.setDropBox(true);
+		Main.flags.setDump(false);
 	}
 	//uitstap
 	public void suppress(){

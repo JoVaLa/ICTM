@@ -38,6 +38,8 @@ public class BringToRack implements Behavior{
 //	double distBtoRack=0.2;
 //	double distWtoRack=0.15;
 	static double[] positionFork;
+	//repository
+	
 	// red column
 	private static double[] shelf11= {0.2,0.05,0.05};
 	static Warehouse rack11=new Warehouse(shelf11,1,5);
@@ -112,9 +114,11 @@ public class BringToRack implements Behavior{
 //    		positionFork[2]=0.05;
 
 		//this.goToInitialState();
+		
 		Main.goToDumpDist(0.1);
-		Main.moveFork(posFork.get(0).getCoordinates(),posFork.get(6).getCoordinates()); 
+		Main.moveFork(posFork.get(0).getCoordinates(),posFork.get(12).getCoordinates()); 
 		Main.flags.setDropBox(true);
+		//Main.moveFork(posFork.get(12).getCoordinates(),posFork.get(0).getCoordinates()); 
 //		Main.boxVast=false;
 //		Main.flags.setBoxVast(false);
 //		Main.vakVol=true;
@@ -146,8 +150,8 @@ public class BringToRack implements Behavior{
 			double posZnew=posNew[2];
 			// change x-position
 			// measure the conversion from degrees to height! Now I chose a hypothetical conversion of 5 cm per 360 degree for driving and 1 cm per 360 degrees for lifting
-			double rotationDrive=(posXnew-posXold)*90/0.05;
-			double rotationLift=(posZnew-posZold)*90/0.01;
+			double rotationDrive=(posXnew-posXold)*2000;
+			double rotationLift=(posZnew-posZold)*10000;
 			LCD.drawInt((int)rotationLift, 1, 1);
 			Main.Drive.setSpeed(100);
 			Main.Lift.setSpeed(720);
