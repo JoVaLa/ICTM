@@ -97,7 +97,7 @@ public class ScanRack3 implements Behavior {
 				if(rowToScan%2==0) {boxToScan=rowToScan*4;}//////////////
 				else {boxToScan=rowToScan*4+3;}
 				
-				double[] initialSpot={Main.posFork.get(boxToScan).getCoordinates()[0]+0.035,Main.posFork.get(boxToScan).getCoordinates()[1],Main.posFork.get(boxToScan).getCoordinates()[2]};
+				double[] initialSpot={Main.posFork.get(boxToScan).getCoordinates()[0],Main.posFork.get(boxToScan).getCoordinates()[1],Main.posFork.get(boxToScan).getCoordinates()[2]+0.035};
 				Main.moveFork(Main.positionFork,initialSpot); // Now we are at the initial spot of the first row we want to scan
 				
 				while(l<=3 &&!suppressed)
@@ -149,12 +149,12 @@ public class ScanRack3 implements Behavior {
 					}
 					if(l<3 && (rowToScan)%2==0)
 					{
-						double[] followingSpot={Main.posFork.get(boxToScan+l+1).getCoordinates()[0]+0.035,Main.posFork.get(boxToScan+l+1).getCoordinates()[1],Main.posFork.get(boxToScan+l+1).getCoordinates()[2]};
+						double[] followingSpot={Main.posFork.get(boxToScan+l+1).getCoordinates()[0],Main.posFork.get(boxToScan+l+1).getCoordinates()[1],Main.posFork.get(boxToScan+l+1).getCoordinates()[2]+0.035};
 						Main.moveFork(Main.positionFork,followingSpot);	// if the colorscanner scans to fast, add delay here
 					}
 					if(l<3 && (rowToScan)%2==1) 
 					{
-						double[] followingSpot={Main.posFork.get(boxToScan-l-1).getCoordinates()[0]+0.035,Main.posFork.get(boxToScan-l-1).getCoordinates()[1],Main.posFork.get(boxToScan-l-1).getCoordinates()[2]};
+						double[] followingSpot={Main.posFork.get(boxToScan-l-1).getCoordinates()[0],Main.posFork.get(boxToScan-l-1).getCoordinates()[1],Main.posFork.get(boxToScan-l-1).getCoordinates()[2]+0.035};
 						Main.moveFork(Main.positionFork,followingSpot);
 						// if the colorscanner scans to fast, add delay here	
 					}
@@ -175,7 +175,7 @@ public class ScanRack3 implements Behavior {
 				int boxToScan=0;
 				if(rowToScan%2==0) {boxToScan=rowToScan*4+3;}
 				else {boxToScan=rowToScan*4;}
-				double[] initialSpot={Main.posFork.get(boxToScan).getCoordinates()[0]+0.035,Main.posFork.get(boxToScan).getCoordinates()[1],Main.posFork.get(boxToScan).getCoordinates()[2]};
+				double[] initialSpot={Main.posFork.get(boxToScan).getCoordinates()[0],Main.posFork.get(boxToScan).getCoordinates()[1],Main.posFork.get(boxToScan).getCoordinates()[2]+0.035};
 				Main.moveFork(Main.positionFork,initialSpot); // Now we are at the initial spot of the second row we want to scan
 				while(l<=3 &&!suppressed)
 				{
@@ -226,12 +226,12 @@ public class ScanRack3 implements Behavior {
 					}
 					if(l<3 && (rowToScan)%2==1)
 					{
-						double[] followingSpot={Main.posFork.get(boxToScan+l+1).getCoordinates()[0]+0.035,Main.posFork.get(boxToScan+l+1).getCoordinates()[1],Main.posFork.get(boxToScan+l+1).getCoordinates()[2]};
+						double[] followingSpot={Main.posFork.get(boxToScan+l+1).getCoordinates()[0],Main.posFork.get(boxToScan+l+1).getCoordinates()[1],Main.posFork.get(boxToScan+l+1).getCoordinates()[2]+0.035};
 						Main.moveFork(Main.positionFork,followingSpot);	// if the colorscanner scans to fast, add delay here
 					}
 					if(l<3 && (rowToScan)%2==0) 
 					{
-						double[] followingSpot={Main.posFork.get(boxToScan-l-1).getCoordinates()[0]+0.035,Main.posFork.get(boxToScan-l-1).getCoordinates()[1],Main.posFork.get(boxToScan-l-1).getCoordinates()[2]};
+						double[] followingSpot={Main.posFork.get(boxToScan-l-1).getCoordinates()[0],Main.posFork.get(boxToScan-l-1).getCoordinates()[1],Main.posFork.get(boxToScan-l-1).getCoordinates()[2]+0.035};
 						Main.moveFork(Main.positionFork,followingSpot);
 						// if the colorscanner scans to fast, add delay here	
 					}
@@ -254,7 +254,7 @@ public class ScanRack3 implements Behavior {
 				int boxToScan=0;
 				if(rowToScan%2==0) {boxToScan=rowToScan*4;}
 				else {boxToScan=rowToScan*4+3;}
-				double[] initialSpot={Main.posFork.get(boxToScan).getCoordinates()[0]+0.035,Main.posFork.get(boxToScan).getCoordinates()[1],Main.posFork.get(boxToScan).getCoordinates()[2]};
+				double[] initialSpot={Main.posFork.get(boxToScan).getCoordinates()[0],Main.posFork.get(boxToScan).getCoordinates()[1],Main.posFork.get(boxToScan).getCoordinates()[2]+0.035};
 				Main.moveFork(Main.positionFork,initialSpot); // Now we are at the initial spot of the second row we want to scan
 				while(l<=3 &&!suppressed)
 				{
@@ -305,7 +305,7 @@ public class ScanRack3 implements Behavior {
 					}
 					if(l<3 && (rowToScan)%2==0)
 					{
-						double[] followingSpot={Main.posFork.get(boxToScan+l+1).getCoordinates()[0]+0.035,Main.posFork.get(boxToScan+l+1).getCoordinates()[1],Main.posFork.get(boxToScan+l+1).getCoordinates()[2]};
+						double[] followingSpot={Main.posFork.get(boxToScan+l+1).getCoordinates()[0],Main.posFork.get(boxToScan+l+1).getCoordinates()[1],Main.posFork.get(boxToScan+l+1).getCoordinates()[2]+0.035};
 						Main.moveFork(Main.positionFork,followingSpot);	// if the colorscanner scans to fast, add delay here
 					}
 					if(l<3 && (rowToScan)%2==1) 

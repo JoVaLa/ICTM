@@ -47,16 +47,16 @@ public class Position extends Thread {
 			// At this point in the while loop we have the position of the vehicle with respect to the left and 
 			// right wall. In our main program, we will call the position vector (x,y,z) that is updated in this thread after each measurement
 			
-			if(positionLeft<0.35)
+			if(positionLeft<0.5)
 			{
-				if(Math.abs((positionLeft-0.05)-Main.positionFork[0])<0.10) {
-				Main.makeUpdate(0,positionLeft-0.05);
+				if(Math.abs((positionLeft-0.08)-Main.positionFork[0])<0.10) {
+				Main.makeUpdate(0,positionLeft-0.08);
 				}
 			}
 			else
 			{
-				if(Math.abs((0.7-positionRight)-Main.positionFork[0])<0.10) {
-				Main.makeUpdate(0,(0.7-positionRight));
+				if(Math.abs((1.245-positionRight-0.05-.32)-Main.positionFork[0])<0.10) {//0.05 is distance between us sensor and scanner
+				Main.makeUpdate(0,(1.245-positionRight-0.05-.32));
 				}
 			}
 			if((positionLeft<0.05 && Main.Drive.getSpeed()<=0) || (positionRight<0.05 && Main.Drive.getSpeed()>=0))
