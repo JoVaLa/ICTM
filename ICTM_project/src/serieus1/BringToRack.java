@@ -153,7 +153,7 @@ public class BringToRack implements Behavior{
 			double rotationDrive=(posXnew-posXold)*2000;
 			double rotationLift=(posZnew-posZold)*10000;
 			LCD.drawInt((int)rotationLift, 1, 1);
-			Main.Drive.setSpeed(100);
+			Main.Drive.setSpeed(200);
 			Main.Lift.setSpeed(720);
 			Main.Drive.rotate(-(int)rotationDrive);
 			Main.Lift.rotate(-(int)rotationLift);

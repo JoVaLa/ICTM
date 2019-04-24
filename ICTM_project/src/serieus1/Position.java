@@ -49,11 +49,23 @@ public class Position extends Thread {
 			
 			if(positionLeft<0.35)
 			{
+				if(Math.abs((positionLeft-0.05)-Main.positionFork[0])<0.10) {
 				Main.makeUpdate(0,positionLeft-0.05);
+				}
 			}
 			else
 			{
+				if(Math.abs((0.7-positionRight)-Main.positionFork[0])<0.10) {
 				Main.makeUpdate(0,(0.7-positionRight));
+				}
+			}
+			if((positionLeft<0.05 && Main.Drive.getSpeed()<=0) || (positionRight<0.05 && Main.Drive.getSpeed()>=0))
+			{
+				Main.flags.setHuman(true);
+			}
+			else
+			{
+				Main.flags.setHuman(false);
 			}
 			// add delay or sleep
 			

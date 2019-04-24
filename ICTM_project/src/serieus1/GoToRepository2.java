@@ -56,7 +56,7 @@ public class GoToRepository2 implements Behavior{
 		double[] onderKol={Main.positionFork[0],0,0};
 		Main.moveFork(Main.positionFork, onderKol);
 		Main.Drive.setSpeed(80);
-		
+		Main.boxCounter[Main.colorRep-1]++;
 		
         while(!suppressed) {
         	

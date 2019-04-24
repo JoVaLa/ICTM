@@ -39,13 +39,15 @@ public class Flags {
 	public boolean dump;
 	public boolean dropBox;
 	public boolean takeBox;
+	public boolean human;
 	
-	public Flags(boolean bv,boolean vv, boolean d, boolean db, boolean tb) {
+	public Flags(boolean bv,boolean vv, boolean d, boolean db, boolean tb, boolean h) {
 		this.boxVast=bv;
 		this.vakVol=vv;
 		this.dump = d;
 		this.dropBox = db;
 		this.takeBox = tb;
+		this.human=h;
 	}
 
 	public static void main(String[] args) {
@@ -87,6 +89,13 @@ public class Flags {
 	public boolean getTakeBox()
 	{
 	return takeBox;
+	}
+	public void setHuman(boolean a){
+		human = a;
+	}
+	public boolean getHuman()
+	{
+	return human;
 	}
 	
 }

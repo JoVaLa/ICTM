@@ -48,8 +48,9 @@ public class Main {
 		static boolean dropBox= false;
 		static boolean takeBox=false;
 		static boolean dump=false;
+		static boolean human=false;
 		static double range=0.01;
-		static Flags flags=new Flags(boxVast,vakVol,dump, dropBox,takeBox);
+		static Flags flags=new Flags(boxVast,vakVol,dump, dropBox,takeBox,human);
 		// dump
 		private static double[] shelf11= {0.0,0.05,0.00};
 		static Warehouse rack11=new Warehouse(shelf11,1,5);
@@ -90,6 +91,8 @@ public class Main {
 		
 		
 		static ArrayList<Warehouse> posFork=new ArrayList<Warehouse>(13);
+		
+		static int[] boxCounter=new int[3];
 		static double[] positionFork=new double[3];
 		
 		static Position positionUpdater=new Position(usWall,usDump); // we can also just do this: new Position(...).start() in the main method
@@ -187,20 +190,22 @@ public class Main {
 		positionUpdater.start();
 		color1.setCurrentMode("RGB");
 		color1.setFloodlight(6);
-		posFork.add(rack11); 
+		 
 		posFork.add(rack12); posFork.add(rack22);posFork.add(rack32);posFork.add(rack42);
 		posFork.add(rack43); posFork.add(rack33);posFork.add(rack23);posFork.add(rack13);
 		posFork.add(rack14); posFork.add(rack24);posFork.add(rack34);posFork.add(rack44);
+		posFork.add(rack11);
 	
 		
 		
-		Behavior [] behaviors = new Behavior[6]; //test
-		behaviors[0]= new ScanRek();
-		behaviors[1]= new BringToRack2(flags,boxVast,color1, Lift, Grab, Drive, usWall, usDump);
-		behaviors[2]= new GoToRepository2(flags,vakVol,color1, Lift, Grab, Drive, usWall, usDump);
-		behaviors[3]= new Dump();
-		behaviors[4]= new TakeBox();
-		behaviors[5]= new DropBox();
+		Behavior [] behaviors = new Behavior[7]; //test
+		behaviors[0]= new SeeHuman2();
+		behaviors[1]= new ScanRack3();
+		behaviors[2]= new BringToRack2(flags,boxVast,color1, Lift, Grab, Drive, usWall, usDump);
+		behaviors[3]= new GoToRepository2(flags,vakVol,color1, Lift, Grab, Drive, usWall, usDump);
+		behaviors[4]= new Dump();
+		behaviors[5]= new TakeBox();
+		behaviors[6]= new DropBox();
 		
 		//behaviors[2]= new ScanRek();
 ////		behaviors[3]= new BringToRepository(color1, Lift, Grab, Drive, us1);
