@@ -94,10 +94,13 @@ public class BringToRack3 implements Behavior{
 		return Main.flags.getBoxVast();
 	}
 	public void action(){
+		double[] onderKol={0.35,0,0};
+		Main.moveFork(Main.positionFork, onderKol);
+		Main.flags.setSensor(true);
 		suppressed=false;
 		int tellerVol=0; // telt hoeveel vakken in een kolom al volzitten
 		LCD.drawString("in BringToRack", 1, 1);
-		Main.Drive.setSpeed(80);
+		//Main.Drive.setSpeed(80);
         	
 //		positionFork=new double[3];
 //		positionFork[0]=0.30;

@@ -29,8 +29,8 @@ public class GoToRepository3 implements Behavior{
 //	private double startPos=0.3;//vaste afstand van dump tot startpositie rek (vakje 1 vd 16)
 	private double range=0.01;
 	private double distRrep=.46;//angle ingeven
-	private double distGrep=.61;
-	private double distBrep=.76;
+	private double distGrep=.50;
+	private double distBrep=.55;
 	//private double distWtoWall=.42;
 
 	
@@ -51,11 +51,14 @@ public class GoToRepository3 implements Behavior{
 	}
 
 	public void action(){
+		Main.Drive.setSpeed(75);
+		LCD.drawString(Main.colorRep+"", 1, 6);
 		suppressed=false;
-		LCD.drawString("in GoToRep", 1, 1);
-		double[] onderKol={Main.positionFork[0],0,0};
+		//LCD.drawString("in GoToRep", 1, 1);
+		double[] onderKol={0.35,0,0};
 		Main.moveFork(Main.positionFork, onderKol);
-		Main.Drive.setSpeed(80);
+		Main.flags.setSensor(false);
+		//Main.Drive.setSpeed(200);
 		Main.boxCounter[Main.colorRep-1]++;
 		
         while(!suppressed) {

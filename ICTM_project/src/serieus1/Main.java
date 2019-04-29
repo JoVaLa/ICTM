@@ -29,24 +29,22 @@ import lejos.robotics.subsumption.*;
 
 public class Main {
 		static int colorRep;
-		
 		static EV3LargeRegulatedMotor Drive=new EV3LargeRegulatedMotor(MotorPort.D);
-		 //Drive.setSpeed(80);
 		static EV3LargeRegulatedMotor Lift=new EV3LargeRegulatedMotor(MotorPort.A);
-		 //Lift.setSpeed(20);
 		static EV3LargeRegulatedMotor Grab=new EV3LargeRegulatedMotor(MotorPort.C);
-		 //Grab.setSpeed(10);
-		static EV3ColorSensor color1=new EV3ColorSensor(SensorPort.S1);
-		static EV3UltrasonicSensor usWall=new EV3UltrasonicSensor(SensorPort.S3);
-		static EV3UltrasonicSensor usDump=new EV3UltrasonicSensor(SensorPort.S4);
+		static EV3ColorSensor color1=new EV3ColorSensor(SensorPort.S4);
+		static EV3UltrasonicSensor usWall=new EV3UltrasonicSensor(SensorPort.S1);
+		static EV3UltrasonicSensor usDump=new EV3UltrasonicSensor(SensorPort.S3);
 		static boolean boxVast= false;
 		static boolean vakVol=true;
 		static boolean dropBox= false;
 		static boolean takeBox=false;
 		static boolean dump=false;
 		static boolean human=false;
+		static boolean error=false;
+		static boolean sensor=true;
 		static double range=0.01;
-		static Flags2 flags=new Flags2(boxVast,vakVol,dump, dropBox,takeBox,human);
+		static Flags2 flags=new Flags2(boxVast,vakVol,dump, dropBox,takeBox,human,error,sensor);
 		// dump
 		private static double[] shelf11= {0.0,0.05,0.00};
 		static Warehouse rack11=new Warehouse(shelf11,1,5);
@@ -58,36 +56,37 @@ public class Main {
 		static Warehouse rack41=new Warehouse(shelf41,1,5);
 		// red column
 		private static double[] shelf12= {0.1,0.05,0.00};
-		static Warehouse rack12=new Warehouse(shelf12,2,5);
+		static Warehouse rack12=new Warehouse(shelf12,1,5);
 		private static double[] shelf22= {0.1,0.05,0.05};
-		static Warehouse rack22=new Warehouse(shelf22,2,5);
+		static Warehouse rack22=new Warehouse(shelf22,1,5);
 		private static double[] shelf32= {0.1,0.05,0.10};
-		static Warehouse rack32=new Warehouse(shelf32,2,5);
+		static Warehouse rack32=new Warehouse(shelf32,1,5);
 		private static double[] shelf42= {0.1,0.05,0.15};
-		static Warehouse rack42=new Warehouse(shelf42,2,5);
+		static Warehouse rack42=new Warehouse(shelf42,1,5);
 		
 		// green column
 		private static double[] shelf13= {0.2,0.05,0.00};
-		static Warehouse rack13=new Warehouse(shelf13,3,5);
+		static Warehouse rack13=new Warehouse(shelf13,2,5);
 		private static double[] shelf23= {0.2,0.05,0.05};
-		static Warehouse rack23=new Warehouse(shelf23,3,5);
+		static Warehouse rack23=new Warehouse(shelf23,2,5);
 		private static double[] shelf33= {0.2,0.05,0.10};
-		static Warehouse rack33=new Warehouse(shelf33,3,5);
+		static Warehouse rack33=new Warehouse(shelf33,2,5);
 		private static double[] shelf43= {0.2,0.05,0.15};
-		static Warehouse rack43=new Warehouse(shelf43,3,5);
+		static Warehouse rack43=new Warehouse(shelf43,2,5);
 		// blue column
 		private static double[] shelf14= {0.3,0.05,0.00};
-		static Warehouse rack14=new Warehouse(shelf14,4,5);
+		static Warehouse rack14=new Warehouse(shelf14,3,5);
 		private static double[] shelf24= {0.3,0.05,0.05};
-		static Warehouse rack24=new Warehouse(shelf24,4,5);
+		static Warehouse rack24=new Warehouse(shelf24,3,5);
 		private static double[] shelf34= {0.3,0.05,0.10};
-		static Warehouse rack34=new Warehouse(shelf34,4,5);
+		static Warehouse rack34=new Warehouse(shelf34,3,5);
 		private static double[] shelf44= {0.3,0.05,0.15};
-		static Warehouse rack44=new Warehouse(shelf44,4,5);
+		static Warehouse rack44=new Warehouse(shelf44,3,5);
 		
 		
 		static ArrayList<Warehouse> posFork=new ArrayList<Warehouse>(13);
-		
+		static String currentColor="";
+		static int[] emptyOrMistake=new int[13];
 		static int[] boxCounter=new int[3];
 		static double[] positionFork=new double[3];
 		
@@ -101,7 +100,7 @@ public class Main {
 		
 		public static void moveFork(double[] posOld,double[] posNew)
 		{
-			LCD.drawString("in movefork", 1, 1);
+			//LCD.drawString("in movefork", 1, 1);
 			double posXold=posOld[0];
 			double posZold=posOld[2];
 			double posXnew=posNew[0];
@@ -110,8 +109,7 @@ public class Main {
 			// measure the conversion from degrees to height! Now I chose a hypothetical conversion of 5 cm per 360 degree for driving and 1 cm per 360 degrees for lifting
 			double rotationDrive=(posXnew-posXold)*2000;
 			double rotationLift=(posZnew-posZold)*10000;
-			Main.Drive.setSpeed(100);
-			Main.Lift.setSpeed(100);
+
 			Main.Drive.rotate(-(int)rotationDrive);
 			Main.Lift.rotate(-(int)rotationLift);
 			Main.makeUpdate(0,posXnew);
@@ -166,8 +164,7 @@ public class Main {
 		    }
 		public static void goToInitialState()
 		{
-			Main.Drive.setSpeed(200);
-			Main.Lift.setSpeed(200);
+			
 			double rotationDrive=(Main.rack12.coordinates[0]-Main.positionFork[0])*2000;
 			double rotationLift=(Main.rack12.coordinates[2]-Main.positionFork[2])*10000;
 			Main.Drive.rotate(-(int)rotationDrive);
@@ -179,13 +176,15 @@ public class Main {
 		
 		
 	public static void main(String[]args)throws InterruptedException{
-		
+		Main.Drive.setSpeed(200);
+		Main.Lift.setSpeed(300);
+		Main.Grab.setSpeed(300);
 		positionFork[2]=0;
 		//Main.goToDumpDist(0.2);
 		//positionFork[0]=0.1;
 		positionUpdater.start();
-		color1.setCurrentMode("RGB");
-		color1.setFloodlight(6);
+		//color1.setCurrentMode("RGB");
+		//color1.setFloodlight(6);
 		 
 		posFork.add(rack12); posFork.add(rack22);posFork.add(rack32);posFork.add(rack42);
 		posFork.add(rack43); posFork.add(rack33);posFork.add(rack23);posFork.add(rack13);
@@ -194,14 +193,15 @@ public class Main {
 	
 		
 		
-		Behavior [] behaviors = new Behavior[7]; //test
-		behaviors[0]= new SeeHuman3();
-		behaviors[1]= new ScanRack4();
-		behaviors[2]= new BringToRack3(flags,boxVast,color1, Lift, Grab, Drive, usWall, usDump);
-		behaviors[3]= new GoToRepository3(flags,vakVol,color1, Lift, Grab, Drive, usWall, usDump);
-		behaviors[4]= new Dump2();
-		behaviors[5]= new TakeBox2();
-		behaviors[6]= new DropBox2();
+		Behavior [] behaviors = new Behavior[6]; //test
+		
+		behaviors[0]= new ScanRack4();
+		behaviors[1]= new BringToRack3(flags,boxVast,color1, Lift, Grab, Drive, usWall, usDump);
+		behaviors[2]= new GoToRepository3(flags,vakVol,color1, Lift, Grab, Drive, usWall, usDump);
+		behaviors[3]= new Dump2();
+		behaviors[4]= new TakeBox2();
+		behaviors[5]= new DropBox2();
+		//behaviors[6]= new SeeHuman3();
 		
 		//behaviors[2]= new ScanRek();
 ////		behaviors[3]= new BringToRepository(color1, Lift, Grab, Drive, us1);
@@ -214,7 +214,7 @@ public class Main {
 		
 		Arbitrator a = new Arbitrator (behaviors);
 		LCD.clearDisplay();
-		LCD.drawString("duw op een knop om te starten", 1, 1);
+		//LCD.drawString("duw op een knop om te starten", 1, 1);
 		//Button.waitForAnyPress();
 		//Thread.sleep(1000);
 		LCD.clear();

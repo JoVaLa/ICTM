@@ -9,23 +9,7 @@ import lejos.utility.Delay;
 public class ScanRack4 implements Behavior {
 	boolean suppressed=false;
 	int initLift=-350;
-//	public static void moveFork(double[] posOld,double[] posNew)
-//	{
-//		double posXold=posOld[0];
-//		double posZold=posOld[2];
-//		double posXnew=posNew[0];
-//		double posZnew=posNew[2];
-//		// change x-position
-//		// measure the conversion from degrees to height! Now I chose a hypothetical conversion of 5 cm per 360 degree for driving and 1 cm per 360 degrees for lifting
-//		double rotationDrive=(posXnew-posXold)*10/0.05;
-//		double rotationLift=(posZnew-posZold)*100/0.01;
-//		Main.Drive.setSpeed(100);
-//		Main.Lift.setSpeed(100);
-//		Main.Drive.rotate(-(int)rotationDrive);
-//		Main.Lift.rotate(-(int)rotationLift);
-//		Main.makeUpdate(0,posXnew);
-//		Main.makeUpdate(2,posZnew);
-//	}
+
 	public static void goToInitialState()
 	{
 		
@@ -39,7 +23,7 @@ public class ScanRack4 implements Behavior {
 	public static void scanPos(int position)
 	{
 		SampleProvider colorSample = Main.color1.getRGBMode();
-
+		//float[][] allSamples
 		int sampleSize = colorSample.sampleSize();
 		float[] sample = new float[sampleSize];
 		colorSample.fetchSample(sample, 0);
@@ -47,25 +31,51 @@ public class ScanRack4 implements Behavior {
     	float green=(float) sample[1];
     	float blue=(float) sample[2];
     	// check if there's a block on the shelf and which one
-    	if(red>0.10 && green<0.05 && blue<0.05)
+//    	if(red>0.07 && green<0.04 && blue<0.04)
+//    	{
+//    		Main.posFork.get(position).setColorBlock(1);
+//    		Main.currentColor=1;
+//    	}
+//    	else if(red<0.05 && green>0.10 && blue<0.05)
+//    	{
+//    		Main.posFork.get(position).setColorBlock(2);
+//    		Main.currentColor=2;
+//    	}
+//    	else if(red<0.05 && green<0.5 && blue>0.10)
+//    	{
+//    		Main.posFork.get(position).setColorBlock(3);
+//    		Main.currentColor=3;
+//    	}
+//    	else if(red>0.08 && green>0.08 && blue>0.08)
+//    	{
+//    		Main.posFork.get(position).setColorBlock(4);
+//    		Main.currentColor=4;
+//    	}
+//    	else
+//    	{
+//    		Main.posFork.get(position).setColorBlock(5);
+//    		Main.currentColor=5;
+//    	}
+    	if(red+blue+green>0.06 && red>blue && red> green)
     	{
     		Main.posFork.get(position).setColorBlock(1);
+    		Main.currentColor="red";
     	}
-    	else if(red<0.05 && green>0.10 && blue<0.05)
+    	else if(red+blue+green>0.06 && green>blue && green>red)
     	{
     		Main.posFork.get(position).setColorBlock(2);
+    		Main.currentColor="green";
     	}
-    	else if(red<0.05 && green<0.5 && blue>0.10)
+    	else if(red+green+blue>0.06 && blue>green && blue>red)
     	{
     		Main.posFork.get(position).setColorBlock(3);
+    		Main.currentColor="blue";
     	}
-    	else if(red>0.08 && green>0.08 && blue>0.08)
-    	{
-    		Main.posFork.get(position).setColorBlock(4);
-    	}
+   
     	else
     	{
     		Main.posFork.get(position).setColorBlock(5);
+    		Main.currentColor="empty";
     	}
 	}
 	public boolean takeControl()
@@ -86,7 +96,7 @@ public class ScanRack4 implements Behavior {
 		suppressed=false;
 		int j=1;
 		// j telt met welke kolom we bezig zijn. De eerste kolom wordt van onder naar boven gescand, de tweede van boven naar onder,...
-		int[] emptyOrMistake=new int[13];
+
 		while(j<=3 && !suppressed)
 		{
 			int l=0;
@@ -104,12 +114,14 @@ public class ScanRack4 implements Behavior {
 				{
 					if(l<=3 && (rowToScan)%2==0) 
 					{
+						Delay.msDelay(1000);
 						scanPos(boxToScan+l);
+						LCD.drawString(Main.currentColor, 1, 5);
 						if(Main.posFork.get(boxToScan+l).getColorBlock()!=Main.posFork.get(boxToScan+l).getColorShelf() && Main.posFork.get(boxToScan+l).getColorBlock()!=5 )//FOUT
 						{
 							// Wa is da hier allemaal?
 							LCD.drawString("Mistake detected", 1, 1);
-							emptyOrMistake[boxToScan+l]=2;
+							Main.emptyOrMistake[boxToScan+l]=2;
 							//Main.Lift.rotate((int)0.01*10000);//van scanhoogte naar pakhoogte (1cm lager)
 							//Main.flags.setTakeBox(true);
 							//Main.flags.setDump(true);
@@ -118,21 +130,30 @@ public class ScanRack4 implements Behavior {
 							
 						}
 						if(Main.posFork.get(boxToScan+l).getColorBlock()==5)//LEEG
-						{
-							emptyOrMistake[boxToScan+l]=1;
+						{	
+//							LCD.clear();
+//							LCD.drawString(Main.currentColor, 1, 1);
+							Main.emptyOrMistake[boxToScan+l]=1;
 							colorCounter[rowToScan]++;
+						}
+						if(Main.posFork.get(boxToScan+l).getColorBlock()==Main.posFork.get(boxToScan+l).getColorShelf() ) {
+//							LCD.clearDisplay();
+//							LCD.drawString(Main.currentColor, 1, 3);
+							//Delay.msDelay(5000);
 						}
 						
 						
 					}
 					if(l<=3 && (rowToScan)%2==1) 
 					{
+						Delay.msDelay(1000);
 						scanPos(boxToScan-l);
+						LCD.drawString(Main.currentColor, 1, 5);
 						if(Main.posFork.get(boxToScan-l).getColorBlock()!=Main.posFork.get(boxToScan-l).getColorShelf() && Main.posFork.get(boxToScan-l).getColorBlock()!=5 )//FOUT
 						{
 							// Wa is da hier allemaal?
 							LCD.drawString("Mistake detected", 1, 1);
-							emptyOrMistake[boxToScan-l]=2;
+							Main.emptyOrMistake[boxToScan-l]=2;
 							//Main.Lift.rotate((int)0.01*10000);//van scanhoogte naar pakhoogte (1cm lager)
 							//Main.flags.setTakeBox(true);
 							//Main.flags.setDump(true);
@@ -142,9 +163,18 @@ public class ScanRack4 implements Behavior {
 						}
 						if(Main.posFork.get(boxToScan-l).getColorBlock()==5)//LEEG
 						{
-							emptyOrMistake[boxToScan-l]=1;
+//							LCD.clear();
+//							LCD.drawString(Main.currentColor, 1, 1);
+							Main.emptyOrMistake[boxToScan-l]=1;
 							colorCounter[rowToScan]++;
+							//LCD.drawString(""+colorCounter[rowToScan], 3, 3);
 						}
+						if(Main.posFork.get(boxToScan+l).getColorBlock()==Main.posFork.get(boxToScan+l).getColorShelf() ) {
+//							LCD.clearDisplay();
+//							LCD.drawString(Main.currentColor, 1, 3);
+							//Delay.msDelay(5000);
+						}
+						
 						
 					}
 					if(l<3 && (rowToScan)%2==0)
@@ -163,6 +193,8 @@ public class ScanRack4 implements Behavior {
 					{
 						Main.colorRep=rowToScan+1;
 						Main.flags.setVakVol(false);
+						suppressed=true;
+						//LCD.drawString(""+colorCounter[rowToScan], 1, 3);
 					}
 				l++;	
 				}
@@ -181,12 +213,14 @@ public class ScanRack4 implements Behavior {
 				{
 					if(l<=3 && (rowToScan)%2==1) 
 					{
+						Delay.msDelay(1000);
 						scanPos(boxToScan+l);
+						LCD.drawString(Main.currentColor, 1, 5);
 						if(Main.posFork.get(boxToScan+l).getColorBlock()!=Main.posFork.get(boxToScan+l).getColorShelf() && Main.posFork.get(boxToScan+l).getColorBlock()!=5 )//FOUT
 						{
 							// Wa is da hier allemaal?
 							LCD.drawString("Mistake detected", 1, 1);
-							emptyOrMistake[boxToScan+l]=2;
+							Main.emptyOrMistake[boxToScan+l]=2;
 							//Main.Lift.rotate((int)0.01*10000);//van scanhoogte naar pakhoogte (1cm lager)
 							//Main.flags.setTakeBox(true);
 							//Main.flags.setDump(true);
@@ -196,20 +230,31 @@ public class ScanRack4 implements Behavior {
 						}
 						if(Main.posFork.get(boxToScan+l).getColorBlock()==5)//LEEG
 						{
-							emptyOrMistake[boxToScan+l]=1;
+//							LCD.clear();
+//							LCD.drawString(Main.currentColor, 1, 1);
+							//LCD.clear();
+							//LCD.drawString(""+colorCounter[rowToScan], 1, 4);
+							Main.emptyOrMistake[boxToScan+l]=1;
 							colorCounter[rowToScan]++;
+						}
+						if(Main.posFork.get(boxToScan+l).getColorBlock()==Main.posFork.get(boxToScan+l).getColorShelf() ) {
+//							LCD.clearDisplay();
+//							LCD.drawString(Main.currentColor, 1, 3);
+							//Delay.msDelay(5000);
 						}
 						
 						
 					}
 					if(l<=3 && (rowToScan)%2==0) 
 					{
+						Delay.msDelay(1000);
 						scanPos(boxToScan-l);
+						LCD.drawString(Main.currentColor, 1, 5);
 						if(Main.posFork.get(boxToScan-l).getColorBlock()!=Main.posFork.get(boxToScan-l).getColorShelf() && Main.posFork.get(boxToScan-l).getColorBlock()!=5 )//FOUT
 						{
 							// Wa is da hier allemaal?
 							LCD.drawString("Mistake detected", 1, 1);
-							emptyOrMistake[boxToScan-l]=2;
+							Main.emptyOrMistake[boxToScan-l]=2;
 							//Main.Lift.rotate((int)0.01*10000);//van scanhoogte naar pakhoogte (1cm lager)
 							//Main.flags.setTakeBox(true);
 							//Main.flags.setDump(true);
@@ -219,8 +264,16 @@ public class ScanRack4 implements Behavior {
 						}
 						if(Main.posFork.get(boxToScan-l).getColorBlock()==5)//LEEG
 						{
-							emptyOrMistake[boxToScan-l]=1;
+//							LCD.clear();
+//							LCD.drawString(Main.currentColor, 1, 1);
+							//LCD.drawString(""+colorCounter[rowToScan], 1, 4);
+							Main.emptyOrMistake[boxToScan-l]=1;
 							colorCounter[rowToScan]++;
+						}
+						if(Main.posFork.get(boxToScan+l).getColorBlock()==Main.posFork.get(boxToScan+l).getColorShelf() ) {
+//							LCD.clearDisplay();
+//							LCD.drawString(Main.currentColor, 1, 3);
+							//Delay.msDelay(5000);
 						}
 						
 					}
@@ -238,8 +291,11 @@ public class ScanRack4 implements Behavior {
 					// now we can check whether there is an empty column and act accordingly
 					if(colorCounter[rowToScan]==4)
 					{
+						
 						Main.colorRep=rowToScan+1;
-						Main.vakVol=false;
+						LCD.drawString(Main.colorRep+"", 1, 4);
+						Main.flags.setVakVol(false);
+						suppressed=true;
 						// If the colorcounter is 4, a column is empty so columns should not further be checked --> make sure the action gets interrupted
 					}
 					l++;	
@@ -260,12 +316,14 @@ public class ScanRack4 implements Behavior {
 				{
 					if(l<=3 && (rowToScan)%2==0) 
 					{
+						Delay.msDelay(1000);
 						scanPos(boxToScan+l);
+						LCD.drawString(Main.currentColor, 1, 5);
 						if(Main.posFork.get(boxToScan+l).getColorBlock()!=Main.posFork.get(boxToScan+l).getColorShelf() && Main.posFork.get(boxToScan+l).getColorBlock()!=5 )//FOUT
 						{
 							// Wa is da hier allemaal?
 							LCD.drawString("Mistake detected", 1, 1);
-							emptyOrMistake[boxToScan+l]=2;
+							Main.emptyOrMistake[boxToScan+l]=2;
 							//Main.Lift.rotate((int)0.01*10000);//van scanhoogte naar pakhoogte (1cm lager)
 							//Main.flags.setTakeBox(true);
 							//Main.flags.setDump(true);
@@ -275,20 +333,29 @@ public class ScanRack4 implements Behavior {
 						}
 						if(Main.posFork.get(boxToScan+l).getColorBlock()==5)//LEEG
 						{
-							emptyOrMistake[boxToScan+l]=1;
+//							LCD.clear();
+//							LCD.drawString(Main.currentColor, 1, 1);
+							Main.emptyOrMistake[boxToScan+l]=1;
 							colorCounter[rowToScan]++;
+						}
+						if(Main.posFork.get(boxToScan+l).getColorBlock()==Main.posFork.get(boxToScan+l).getColorShelf() ) {
+//							LCD.clearDisplay();
+//							LCD.drawString(Main.currentColor, 1, 3);
+							//Delay.msDelay(5000);
 						}
 						
 						
 					}
 					if(l<=3 && (rowToScan)%2==1) 
 					{
+						Delay.msDelay(1000);
 						scanPos(boxToScan-l);
+						LCD.drawString(Main.currentColor, 1, 5);
 						if(Main.posFork.get(boxToScan-l).getColorBlock()!=Main.posFork.get(boxToScan-l).getColorShelf() && Main.posFork.get(boxToScan-l).getColorBlock()!=5 )//FOUT
 						{
 							// Wa is da hier allemaal?
 							LCD.drawString("Mistake detected", 1, 1);
-							emptyOrMistake[boxToScan-l]=2;
+							Main.emptyOrMistake[boxToScan-l]=2;
 							//Main.Lift.rotate((int)0.01*10000);//van scanhoogte naar pakhoogte (1cm lager)
 							//Main.flags.setTakeBox(true);
 							//Main.flags.setDump(true);
@@ -298,8 +365,15 @@ public class ScanRack4 implements Behavior {
 						}
 						if(Main.posFork.get(boxToScan-l).getColorBlock()==5)//LEEG
 						{
-							emptyOrMistake[boxToScan-l]=1;
+//							LCD.clear();
+//							LCD.drawString(Main.currentColor, 1, 1);
+							Main.emptyOrMistake[boxToScan-l]=1;
 							colorCounter[rowToScan]++;
+						}
+						if(Main.posFork.get(boxToScan+l).getColorBlock()==Main.posFork.get(boxToScan+l).getColorShelf() ) {
+//							LCD.clearDisplay();
+//							LCD.drawString(Main.currentColor, 1, 3);
+							//Delay.msDelay(5000);
 						}
 						
 					}
@@ -318,7 +392,8 @@ public class ScanRack4 implements Behavior {
 					if(colorCounter[rowToScan]==4)
 					{
 						Main.colorRep=rowToScan+1;
-						Main.vakVol=false;
+						Main.flags.setVakVol(false);
+						suppressed=true;
 						
 					}
 				l++;	
@@ -331,8 +406,12 @@ public class ScanRack4 implements Behavior {
 		// First we check here where the mistake is and send this to the behavior 'fix error'
 		
 		// if there is no mistake we check which color should be taken in the repository, therefore: adapt the takeControl of goToRep: not only vakvol, choose a new boolean that says to go to the repository
-		Main.colorRep=getIndexOfSmallest(colorCounter);
+		if(colorCounter[0]!=4 &&colorCounter[1]!=4 &&colorCounter[2]!=4) {
+			
+			Main.colorRep=getIndexOfSmallest(colorCounter)+1;
+		}
 		//set a specific boolean true or false
+		Main.flags.setVakVol(false);
 		
 	}
 		

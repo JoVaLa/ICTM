@@ -40,19 +40,30 @@ public class Flags2 {
 	public boolean dropBox;
 	public boolean takeBox;
 	public boolean human;
+	public boolean error;
+	public boolean sensor;//true is dump
 	
-	public Flags2(boolean bv,boolean vv, boolean d, boolean db, boolean tb, boolean h) {
+	public Flags2(boolean bv,boolean vv, boolean d, boolean db, boolean tb, boolean h,boolean e,boolean s) {
 		this.boxVast=bv;
 		this.vakVol=vv;
 		this.dump = d;
 		this.dropBox = db;
 		this.takeBox = tb;
 		this.human=h;
+		this.sensor=s;
 	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
+	}
+	public void setSensor(boolean a)
+	{
+			sensor=a;
+	}
+	public boolean getSensor()
+	{
+		return sensor;
 	}
 	public void setBoxVast(boolean a)
 	{
@@ -96,6 +107,14 @@ public class Flags2 {
 	public boolean getHuman()
 	{
 	return human;
+	}
+	public void setError(boolean a)
+	{
+			error=a;
+	}
+	public boolean getError()
+	{
+		return error;
 	}
 	
 }
