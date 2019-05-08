@@ -42,8 +42,9 @@ public class Flags2 {
 	public boolean human;
 	public boolean error;
 	public boolean sensor;//true is dump
+	public boolean btr;
 	
-	public Flags2(boolean bv,boolean vv, boolean d, boolean db, boolean tb, boolean h,boolean e,boolean s) {
+	public Flags2(boolean bv,boolean vv, boolean d, boolean db, boolean tb, boolean h,boolean e,boolean s,boolean btr) {
 		this.boxVast=bv;
 		this.vakVol=vv;
 		this.dump = d;
@@ -51,6 +52,7 @@ public class Flags2 {
 		this.takeBox = tb;
 		this.human=h;
 		this.sensor=s;
+		this.btr=btr;
 	}
 
 	public static void main(String[] args) {
@@ -115,6 +117,14 @@ public class Flags2 {
 	public boolean getError()
 	{
 		return error;
+	}
+	public void setBtr(boolean a)
+	{
+			btr=a;
+	}
+	public boolean getBtr()
+	{
+		return btr;
 	}
 	
 }

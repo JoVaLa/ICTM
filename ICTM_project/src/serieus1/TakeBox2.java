@@ -1,6 +1,7 @@
 package serieus1;
 	import lejos.hardware.port.MotorPort;
-	import lejos.hardware.motor.EV3LargeRegulatedMotor;
+import lejos.hardware.lcd.LCD;
+import lejos.hardware.motor.EV3LargeRegulatedMotor;
 	import lejos.hardware.motor.EV3MediumRegulatedMotor;
 	import lejos.robotics.subsumption.Behavior;
 
@@ -16,15 +17,18 @@ public class TakeBox2 implements Behavior{
 
 	//handeling
 	public void action(){
-		Main.Grab.setSpeed(100);
-		Main.Lift.setSpeed(100);
-		Main.Grab.rotate(400);
+		//LCD.drawString("takebox", 1, 7);
+		Main.Drive.stop();
+		Main.Grab.setSpeed(200);
+		Main.Lift.setSpeed(200);
+		Main.Grab.rotate(470);
 		Main.Lift.rotate(-180);
-		Main.Grab.rotate(-400);
+		Main.Grab.rotate(-470);
 		Main.Lift.rotate(180);
 		//Main.Lift.rotate(-180); //om geen hoogteverschil te hebben met beginpositie
 		Main.flags.setBoxVast(true);
 		Main.flags.setTakeBox(false);
+		Main.flags.setBtr(true);
 	}
 	//uitstap
 	public void suppress(){

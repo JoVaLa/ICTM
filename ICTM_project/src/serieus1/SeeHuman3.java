@@ -3,6 +3,7 @@ package serieus1;
 import java.util.ArrayList;
 
 import lejos.robotics.subsumption.Behavior;
+import lejos.utility.Delay;
 
 
 
@@ -19,6 +20,7 @@ public class SeeHuman3 implements Behavior{
 	public void action(){
 		
 			Main.Drive.stop();
+			Delay.msDelay(3000);
 		
 	}
 	//uitstap

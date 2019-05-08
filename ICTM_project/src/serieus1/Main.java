@@ -43,46 +43,47 @@ public class Main {
 		static boolean human=false;
 		static boolean error=false;
 		static boolean sensor=true;
+		static boolean btr=false;
 		static double range=0.01;
-		static Flags2 flags=new Flags2(boxVast,vakVol,dump, dropBox,takeBox,human,error,sensor);
+		static int[] vak=new int[12];//voor matrix print
+		static Flags2 flags=new Flags2(boxVast,vakVol,dump, dropBox,takeBox,human,error,sensor,btr);
 		// dump
-		private static double[] shelf11= {0.0,0.05,0.00};
-		static Warehouse rack11=new Warehouse(shelf11,1,5);
-		private static double[] shelf21= {0.0,0.05,0.05};
-		static Warehouse rack21=new Warehouse(shelf21,1,5);
-		private static double[] shelf31= {0.0,0.05,0.10};
-		static Warehouse rack31=new Warehouse(shelf31,1,5);
-		private static double[] shelf41= {0.0,0.05,0.15};
-		static Warehouse rack41=new Warehouse(shelf41,1,5);
-		// red column
-		private static double[] shelf12= {0.1,0.05,0.00};
+		private static double[] shelf12= {0.002,0.05,0.01};
 		static Warehouse rack12=new Warehouse(shelf12,1,5);
-		private static double[] shelf22= {0.1,0.05,0.05};
+		private static double[] shelf22= {0.002,0.05,0.065};
 		static Warehouse rack22=new Warehouse(shelf22,1,5);
-		private static double[] shelf32= {0.1,0.05,0.10};
+		private static double[] shelf32= {0.002,0.05,0.115};
 		static Warehouse rack32=new Warehouse(shelf32,1,5);
-		private static double[] shelf42= {0.1,0.05,0.15};
+		private static double[] shelf42= {0.002,0.05,0.16};
 		static Warehouse rack42=new Warehouse(shelf42,1,5);
+		// red column
+		private static double[] shelf13= {0.105,0.05,0.01};
+		static Warehouse rack13=new Warehouse(shelf13,2,5);
+		private static double[] shelf23= {0.105,0.05,0.065};
+		static Warehouse rack23=new Warehouse(shelf23,2,5);
+		private static double[] shelf33= {0.105,0.05,0.115};
+		static Warehouse rack33=new Warehouse(shelf33,2,5);
+		private static double[] shelf43= {0.105,0.05,0.16};
+		static Warehouse rack43=new Warehouse(shelf43,2,5);
 		
 		// green column
-		private static double[] shelf13= {0.2,0.05,0.00};
-		static Warehouse rack13=new Warehouse(shelf13,2,5);
-		private static double[] shelf23= {0.2,0.05,0.05};
-		static Warehouse rack23=new Warehouse(shelf23,2,5);
-		private static double[] shelf33= {0.2,0.05,0.10};
-		static Warehouse rack33=new Warehouse(shelf33,2,5);
-		private static double[] shelf43= {0.2,0.05,0.15};
-		static Warehouse rack43=new Warehouse(shelf43,2,5);
-		// blue column
-		private static double[] shelf14= {0.3,0.05,0.00};
+		private static double[] shelf14= {0.21,0.05,0.01};
 		static Warehouse rack14=new Warehouse(shelf14,3,5);
-		private static double[] shelf24= {0.3,0.05,0.05};
+		private static double[] shelf24= {0.21,0.05,0.065};
 		static Warehouse rack24=new Warehouse(shelf24,3,5);
-		private static double[] shelf34= {0.3,0.05,0.10};
+		private static double[] shelf34= {0.21,0.05,0.115};
 		static Warehouse rack34=new Warehouse(shelf34,3,5);
-		private static double[] shelf44= {0.3,0.05,0.15};
+		private static double[] shelf44= {0.21,0.05,0.16};
 		static Warehouse rack44=new Warehouse(shelf44,3,5);
-		
+		// blue column
+		private static double[] shelf11= {0.31,0.05,0.01};
+		static Warehouse rack11=new Warehouse(shelf11,5,5);
+		private static double[] shelf21= {0.3,0.05,0.065};
+		static Warehouse rack21=new Warehouse(shelf21,5,5);
+		private static double[] shelf31= {0.3,0.05,0.115};
+		static Warehouse rack31=new Warehouse(shelf31,5,5);
+		private static double[] shelf41= {0.3,0.05,0.16};
+		static Warehouse rack41=new Warehouse(shelf41,5,5);
 		
 		static ArrayList<Warehouse> posFork=new ArrayList<Warehouse>(13);
 		static String currentColor="";
@@ -90,7 +91,12 @@ public class Main {
 		static int[] boxCounter=new int[3];
 		static double[] positionFork=new double[3];
 		
+		
 		static Position2 positionUpdater=new Position2(usWall,usDump); // we can also just do this: new Position(...).start() in the main method
+		public static int AOE;
+		
+		
+	
 		
 		public static synchronized void makeUpdate(int i,double posNew)
 		{
@@ -172,14 +178,23 @@ public class Main {
 			Main.makeUpdate(0,Main.rack12.coordinates[0]);
 			Main.makeUpdate(2,Main.rack12.coordinates[2]);
 		}
+		public static void printRack (){
+			//LCD.clearDisplay();
+			LCD.drawString(Main.rack42.getColorBlock()+" "+ Main.rack43.getColorBlock()+" "+ Main.rack44.getColorBlock(),1,2 );
+			LCD.drawString(Main.rack32.getColorBlock()+" "+ Main.rack33.getColorBlock()+" "+ Main.rack34.getColorBlock(),1,3); 
+			LCD.drawString(Main.rack22.getColorBlock()+" "+ Main.rack23.getColorBlock()+" "+ Main.rack24.getColorBlock(),1,4);
+			LCD.drawString(Main.rack12.getColorBlock()+" "+ Main.rack13.getColorBlock()+" "+ Main.rack14.getColorBlock(), 1,5);
+			
+			}
 		
 		
 		
 	public static void main(String[]args)throws InterruptedException{
-		Main.Drive.setSpeed(200);
+		Main.Drive.setSpeed(120);
 		Main.Lift.setSpeed(300);
 		Main.Grab.setSpeed(300);
-		positionFork[2]=0;
+		AOE=0;
+		positionFork[2]=0.01;
 		//Main.goToDumpDist(0.2);
 		//positionFork[0]=0.1;
 		positionUpdater.start();
@@ -193,32 +208,23 @@ public class Main {
 	
 		
 		
-		Behavior [] behaviors = new Behavior[6]; //test
+		Behavior [] behaviors = new Behavior[8]; //test
 		
 		behaviors[0]= new ScanRack4();
-		behaviors[1]= new BringToRack3(flags,boxVast,color1, Lift, Grab, Drive, usWall, usDump);
-		behaviors[2]= new GoToRepository3(flags,vakVol,color1, Lift, Grab, Drive, usWall, usDump);
-		behaviors[3]= new Dump2();
-		behaviors[4]= new TakeBox2();
-		behaviors[5]= new DropBox2();
-		//behaviors[6]= new SeeHuman3();
-		
-		//behaviors[2]= new ScanRek();
-////		behaviors[3]= new BringToRepository(color1, Lift, Grab, Drive, us1);
-////		behaviors[]= new GetFromRep
-////		behaviors[]= new FixError
-//		behaviors[4]= new BringToRek(color1, Lift, Grab, Drive, usWall, usDump);
-//		behaviors[5]= new Dump(color1, Lift, Grab, Drive, usDump);
-//		behaviors[6]= new SeeHuman(color1,Drive);
+		behaviors[1]=new FixError();
+		behaviors[2]= new BringToRack3(flags,boxVast,color1, Lift, Grab, Drive, usWall, usDump);
+		behaviors[3]= new GoToRepository3(flags,vakVol,color1, Lift, Grab, Drive, usWall, usDump);
+		behaviors[4]= new Dump2();
+		behaviors[5]= new TakeBox2();
+		behaviors[6]= new DropBox2();
+		behaviors[7]= new SeeHuman3();
+
 		
 		
 		Arbitrator a = new Arbitrator (behaviors);
 		LCD.clearDisplay();
-		//LCD.drawString("duw op een knop om te starten", 1, 1);
-		//Button.waitForAnyPress();
-		//Thread.sleep(1000);
 		LCD.clear();
-		a.go();//let the fun begin
+		a.go();
 	}
 	
 	

@@ -27,10 +27,10 @@ public class GoToRepository3 implements Behavior{
 //	private int teller=0;
 //	private double beginPos = 0;//positie waar 'BringtoRek' is opgeroepen
 //	private double startPos=0.3;//vaste afstand van dump tot startpositie rek (vakje 1 vd 16)
-	private double range=0.01;
-	private double distRrep=.46;//angle ingeven
-	private double distGrep=.50;
-	private double distBrep=.55;
+	private double range=0.008;
+	private double distRrep=.435;//angle ingeven
+	private double distGrep=.555;
+	private double distBrep=.69;
 	//private double distWtoWall=.42;
 
 	
@@ -51,12 +51,15 @@ public class GoToRepository3 implements Behavior{
 	}
 
 	public void action(){
-		Main.Drive.setSpeed(75);
+		LCD.drawString("gotorep", 1, 7);
+		//Main.Drive.setSpeed(200);
 		LCD.drawString(Main.colorRep+"", 1, 6);
 		suppressed=false;
 		//LCD.drawString("in GoToRep", 1, 1);
-		double[] onderKol={0.35,0,0};
+		if(Main.positionFork[0]<0.38) {
+		double[] onderKol={0.38,0,0.01};
 		Main.moveFork(Main.positionFork, onderKol);
+		}
 		Main.flags.setSensor(false);
 		//Main.Drive.setSpeed(200);
 		Main.boxCounter[Main.colorRep-1]++;
@@ -76,38 +79,43 @@ public class GoToRepository3 implements Behavior{
                 	Main.Drive.stop();
                 	LCD.drawString("gtr 11111", 1, 1);
                 	//this.vakVol=false;  
+                	boxVast=true;
                 	Main.flags.setTakeBox(true);
                 	suppressed=true;
                 	
                 }
         	}
         	if (Main.colorRep==2) {
-        		if((Main.positionFork[0]-distGrep)<range) {
+        		if((Math.abs(Main.positionFork[0]-distGrep)>range) && (Main.positionFork[0]-distGrep)<0) {
                 	Main.Drive.backward();
+                	
                 }
-            	else if((Main.positionFork[0]-distGrep)>range ) {
+            	else if((Math.abs(Main.positionFork[0]-distGrep)>range) && (Main.positionFork[0]-distGrep)>0) {
                 	Main.Drive.forward();
                 }
                 else {
                 	Main.Drive.stop();
                 	//this.vakVol=false;
                 	boxVast=true;
-                	Main.flags.setBoxVast(true);
+                	Main.flags.setTakeBox(true);
+                	suppressed=true;
                 	
                 }
         	}
         	if (Main.colorRep==3) {
-        		if((Main.positionFork[0]-distBrep)<range ) {
+        		if((Math.abs(Main.positionFork[0]-distBrep)>range) && (Main.positionFork[0]-distBrep)<0) {
                 	Main.Drive.backward();
+                	
                 }
-            	else if((Main.positionFork[0]-distBrep)>0 ) {
+            	else if((Math.abs(Main.positionFork[0]-distBrep)>range) && (Main.positionFork[0]-distBrep)>0) {
                 	Main.Drive.forward();
                 }
                 else {
                 	Main.Drive.stop();
                 	//this.vakVol=false;
                 	boxVast=true;
-                	Main.flags.setBoxVast(true);
+                	Main.flags.setTakeBox(true);
+                	suppressed=true;
                 	
                 }
         	}

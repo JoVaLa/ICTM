@@ -1,5 +1,6 @@
 package serieus1;
 import lejos.hardware.port.MotorPort;
+import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
 import lejos.robotics.subsumption.Behavior;
@@ -14,12 +15,14 @@ public class DropBox2 implements Behavior {
 	}
 	//handeling
 		public void action(){
-			Main.Grab.setSpeed(100);
-			Main.Lift.setSpeed(100);
+			//LCD.drawString("dropbox", 1, 1);
+			Main.Drive.stop();
+			Main.Grab.setSpeed(200);
+			Main.Lift.setSpeed(200);
 			//Main.Lift.rotate(-180);
-			Main.Grab.rotate(400);
+			Main.Grab.rotate(470);
 			Main.Lift.rotate(180);
-			Main.Grab.rotate(-400);
+			Main.Grab.rotate(-470);
 			Main.Lift.rotate(-180);
 			if(Main.flags.getDumb()==true) {
 				Main.flags.setDump(false);

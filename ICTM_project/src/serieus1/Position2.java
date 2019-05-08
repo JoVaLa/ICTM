@@ -51,17 +51,17 @@ public class Position2 extends Thread {
 			
 			if(Main.flags.getSensor())
 			{
-				//if(Math.abs((positionLeft-0.08)-Main.positionFork[0])<0.10) {
-				Main.makeUpdate(0,positionLeft-0.08);
-				//}
+				if(Math.abs((positionLeft-0.06)-Main.positionFork[0])<0.08) {
+				Main.makeUpdate(0,positionLeft-0.06);
+				}
 			}
 			else
 			{
-				//if(Math.abs((1.245-positionRight-0.05-.32)-Main.positionFork[0])<0.10) {//0.05 is distance between us sensor and scanner
-				Main.makeUpdate(0,(1.095-positionRight-0.05-.32));
-				//}
+				if(Math.abs((1.104-positionRight-0.055-.30)-Main.positionFork[0])<0.08) {//0.05 is distance between us sensor and scanner
+				Main.makeUpdate(0,(1.104-positionRight-0.055-.30));
+				}
 			}
-			if((positionLeft<0.05 && Main.Drive.getSpeed()<=0) || (positionRight<0.05 && Main.Drive.getSpeed()>=0))
+			if((positionLeft<0.05 && Main.Drive.getSpeed()>=0) || (positionRight<0.05 && Main.Drive.getSpeed()>=0))
 			{
 				Main.flags.setHuman(true);
 			}
@@ -70,8 +70,10 @@ public class Position2 extends Thread {
 				Main.flags.setHuman(false);
 			}
 			// add delay or sleep
-			LCD.drawString(" "+Main.positionFork[0], 2, 1);
-			LCD.drawString(" "+positionRight, 1, 3);
+			//LCD.clear();
+			//LCD.drawString(" "+Main.positionFork[2], 1, 7);
+			//LCD.drawString(" "+positionRight, 1, 7);
+			
 		}
 	}
 	// synchronization --> write a method for changing the position vector and call this method in both the main thread and this thread here

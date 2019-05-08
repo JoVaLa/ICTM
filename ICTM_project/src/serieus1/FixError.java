@@ -15,29 +15,19 @@ public class FixError implements Behavior{
 	private EV3UltrasonicSensor us1;
 	
 	boolean suppressed=false;
-	public FixError(EV3ColorSensor c1,EV3LargeRegulatedMotor L, EV3LargeRegulatedMotor G, EV3LargeRegulatedMotor D,EV3UltrasonicSensor U) {
-		// TODO Auto-generated constructor stub
-	}
+
 	
 	
 	public boolean takeControl(){
-		return true;
+		return (Main.flags.error && Main.AOE>0);
 	}
 	//handeling
 	public void action(){
-		int AOE = 0;//AmountOfErrors
-		int i = 0;
+		suppressed=false;
 		
-		while(i < 12) {
-			if(Main.emptyOrMistake[i]==2) {
-				AOE++;
-			}
-			i++;
-		}
+
 		
-		if(AOE==0) {
-			Main.flags.error = false;
-		}
+		
 		
 		boolean FirstBlood = false;
 		int FE = 0;//FirstError
@@ -50,10 +40,17 @@ public class FixError implements Behavior{
 			k++;
 		}
 		
-		double[] FEL = {Main.posFork.get(FE).getCoordinates()[0],Main.posFork.get(FE).getCoordinates()[1],Main.posFork.get(FE).getCoordinates()[2]+0.035};
+		double[] FEL = {Main.posFork.get(FE).getCoordinates()[0],Main.posFork.get(FE).getCoordinates()[1],Main.posFork.get(FE).getCoordinates()[2]+0.004};
 		Main.moveFork(Main.positionFork,FEL);
 		Main.colorRep = Main.posFork.get(FE).getColorBlock();
-		Main.takeBox = true;	
+		Main.emptyOrMistake[FE]=1;
+		Main.posFork.get(FE).setColorBlock(5);
+		Main.AOE--;
+		if(Main.AOE==0) {
+			Main.flags.setError(false);;
+			suppressed=true;
+		}
+		Main.flags.setTakeBox(true);	
 	}
 	//uitstap
 	public void suppress(){

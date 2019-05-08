@@ -31,7 +31,7 @@ public class ScanRack4 implements Behavior {
     	float green=(float) sample[1];
     	float blue=(float) sample[2];
     	// check if there's a block on the shelf and which one
-//    	if(red>0.07 && green<0.04 && blue<0.04)
+//    	if(red>0.07 && green<0.045 && blue<0.045)
 //    	{
 //    		Main.posFork.get(position).setColorBlock(1);
 //    		Main.currentColor=1;
@@ -61,7 +61,7 @@ public class ScanRack4 implements Behavior {
     		Main.posFork.get(position).setColorBlock(1);
     		Main.currentColor="red";
     	}
-    	else if(red+blue+green>0.06 && green>blue && green>red)
+    	else if(red+blue+green>0.05 && green>blue && green>red)
     	{
     		Main.posFork.get(position).setColorBlock(2);
     		Main.currentColor="green";
@@ -86,12 +86,18 @@ public class ScanRack4 implements Behavior {
 	
 	public void action() 
 	{
+		
+		Main.Lift.setSpeed(500);
+		Boolean chooseColumn=false;
 //		int tellerR=0;
 //		int tellerG=0;
 //		int tellerB=0;
 		// We make an array out of it
 		int[] newboxCounter=new int[3];
-		newboxCounter=Main.boxCounter;
+		for(int i=0;i<3;i++)
+		{
+			newboxCounter[i]=Main.boxCounter[i];
+		}
 		int[] colorCounter=new int[3];
 		suppressed=false;
 		int j=1;
@@ -102,12 +108,12 @@ public class ScanRack4 implements Behavior {
 			int l=0;
 			if(j==1)
 			{
-				int rowToScan=getIndexOfLargest(Main.boxCounter);
+				int rowToScan=getIndexOfLargest(newboxCounter);
 				int boxToScan=0;
 				if(rowToScan%2==0) {boxToScan=rowToScan*4;}//////////////
 				else {boxToScan=rowToScan*4+3;}
 				
-				double[] initialSpot={Main.posFork.get(boxToScan).getCoordinates()[0],Main.posFork.get(boxToScan).getCoordinates()[1],Main.posFork.get(boxToScan).getCoordinates()[2]+0.035};
+				double[] initialSpot={Main.posFork.get(boxToScan).getCoordinates()[0],Main.posFork.get(boxToScan).getCoordinates()[1],Main.posFork.get(boxToScan).getCoordinates()[2]+0.045};
 				Main.moveFork(Main.positionFork,initialSpot); // Now we are at the initial spot of the first row we want to scan
 				
 				while(l<=3 &&!suppressed)
@@ -122,23 +128,25 @@ public class ScanRack4 implements Behavior {
 							// Wa is da hier allemaal?
 							LCD.drawString("Mistake detected", 1, 1);
 							Main.emptyOrMistake[boxToScan+l]=2;
+							Main.AOE++;
 							//Main.Lift.rotate((int)0.01*10000);//van scanhoogte naar pakhoogte (1cm lager)
 							//Main.flags.setTakeBox(true);
 							//Main.flags.setDump(true);
 							// The only thing that should happen now is the robot needs to remember there is a mistake and he should fix it when he has time so mistake boolean could be set equal to true
 							LCD.clear();
 							
+							
 						}
 						if(Main.posFork.get(boxToScan+l).getColorBlock()==5)//LEEG
 						{	
 //							LCD.clear();
-//							LCD.drawString(Main.currentColor, 1, 1);
+							LCD.drawString(Main.currentColor, 1, 5);
 							Main.emptyOrMistake[boxToScan+l]=1;
 							colorCounter[rowToScan]++;
 						}
 						if(Main.posFork.get(boxToScan+l).getColorBlock()==Main.posFork.get(boxToScan+l).getColorShelf() ) {
 //							LCD.clearDisplay();
-//							LCD.drawString(Main.currentColor, 1, 3);
+							LCD.drawString(Main.currentColor, 1, 5);
 							//Delay.msDelay(5000);
 						}
 						
@@ -154,6 +162,7 @@ public class ScanRack4 implements Behavior {
 							// Wa is da hier allemaal?
 							LCD.drawString("Mistake detected", 1, 1);
 							Main.emptyOrMistake[boxToScan-l]=2;
+							Main.AOE++;
 							//Main.Lift.rotate((int)0.01*10000);//van scanhoogte naar pakhoogte (1cm lager)
 							//Main.flags.setTakeBox(true);
 							//Main.flags.setDump(true);
@@ -164,14 +173,14 @@ public class ScanRack4 implements Behavior {
 						if(Main.posFork.get(boxToScan-l).getColorBlock()==5)//LEEG
 						{
 //							LCD.clear();
-//							LCD.drawString(Main.currentColor, 1, 1);
+							LCD.drawString(Main.currentColor, 1, 5);
 							Main.emptyOrMistake[boxToScan-l]=1;
 							colorCounter[rowToScan]++;
 							//LCD.drawString(""+colorCounter[rowToScan], 3, 3);
 						}
-						if(Main.posFork.get(boxToScan+l).getColorBlock()==Main.posFork.get(boxToScan+l).getColorShelf() ) {
+						if(Main.posFork.get(boxToScan-l).getColorBlock()==Main.posFork.get(boxToScan-l).getColorShelf() ) {
 //							LCD.clearDisplay();
-//							LCD.drawString(Main.currentColor, 1, 3);
+							LCD.drawString(Main.currentColor, 1, 5);
 							//Delay.msDelay(5000);
 						}
 						
@@ -179,12 +188,12 @@ public class ScanRack4 implements Behavior {
 					}
 					if(l<3 && (rowToScan)%2==0)
 					{
-						double[] followingSpot={Main.posFork.get(boxToScan+l+1).getCoordinates()[0],Main.posFork.get(boxToScan+l+1).getCoordinates()[1],Main.posFork.get(boxToScan+l+1).getCoordinates()[2]+0.035};
+						double[] followingSpot={Main.posFork.get(boxToScan+l+1).getCoordinates()[0],Main.posFork.get(boxToScan+l+1).getCoordinates()[1],Main.posFork.get(boxToScan+l+1).getCoordinates()[2]+0.045};
 						Main.moveFork(Main.positionFork,followingSpot);	// if the colorscanner scans to fast, add delay here
 					}
 					if(l<3 && (rowToScan)%2==1) 
 					{
-						double[] followingSpot={Main.posFork.get(boxToScan-l-1).getCoordinates()[0],Main.posFork.get(boxToScan-l-1).getCoordinates()[1],Main.posFork.get(boxToScan-l-1).getCoordinates()[2]+0.035};
+						double[] followingSpot={Main.posFork.get(boxToScan-l-1).getCoordinates()[0],Main.posFork.get(boxToScan-l-1).getCoordinates()[1],Main.posFork.get(boxToScan-l-1).getCoordinates()[2]+0.045};
 						Main.moveFork(Main.positionFork,followingSpot);
 						// if the colorscanner scans to fast, add delay here	
 					}
@@ -194,6 +203,7 @@ public class ScanRack4 implements Behavior {
 						Main.colorRep=rowToScan+1;
 						Main.flags.setVakVol(false);
 						suppressed=true;
+						chooseColumn=true;
 						//LCD.drawString(""+colorCounter[rowToScan], 1, 3);
 					}
 				l++;	
@@ -207,7 +217,7 @@ public class ScanRack4 implements Behavior {
 				int boxToScan=0;
 				if(rowToScan%2==0) {boxToScan=rowToScan*4+3;}
 				else {boxToScan=rowToScan*4;}
-				double[] initialSpot={Main.posFork.get(boxToScan).getCoordinates()[0],Main.posFork.get(boxToScan).getCoordinates()[1],Main.posFork.get(boxToScan).getCoordinates()[2]+0.035};
+				double[] initialSpot={Main.posFork.get(boxToScan).getCoordinates()[0],Main.posFork.get(boxToScan).getCoordinates()[1],Main.posFork.get(boxToScan).getCoordinates()[2]+0.045};
 				Main.moveFork(Main.positionFork,initialSpot); // Now we are at the initial spot of the second row we want to scan
 				while(l<=3 &&!suppressed)
 				{
@@ -221,6 +231,7 @@ public class ScanRack4 implements Behavior {
 							// Wa is da hier allemaal?
 							LCD.drawString("Mistake detected", 1, 1);
 							Main.emptyOrMistake[boxToScan+l]=2;
+							Main.AOE++;
 							//Main.Lift.rotate((int)0.01*10000);//van scanhoogte naar pakhoogte (1cm lager)
 							//Main.flags.setTakeBox(true);
 							//Main.flags.setDump(true);
@@ -231,7 +242,7 @@ public class ScanRack4 implements Behavior {
 						if(Main.posFork.get(boxToScan+l).getColorBlock()==5)//LEEG
 						{
 //							LCD.clear();
-//							LCD.drawString(Main.currentColor, 1, 1);
+							LCD.drawString(Main.currentColor, 1, 5);
 							//LCD.clear();
 							//LCD.drawString(""+colorCounter[rowToScan], 1, 4);
 							Main.emptyOrMistake[boxToScan+l]=1;
@@ -239,7 +250,7 @@ public class ScanRack4 implements Behavior {
 						}
 						if(Main.posFork.get(boxToScan+l).getColorBlock()==Main.posFork.get(boxToScan+l).getColorShelf() ) {
 //							LCD.clearDisplay();
-//							LCD.drawString(Main.currentColor, 1, 3);
+							LCD.drawString(Main.currentColor, 1, 5);
 							//Delay.msDelay(5000);
 						}
 						
@@ -255,36 +266,37 @@ public class ScanRack4 implements Behavior {
 							// Wa is da hier allemaal?
 							LCD.drawString("Mistake detected", 1, 1);
 							Main.emptyOrMistake[boxToScan-l]=2;
+							Main.AOE++;
 							//Main.Lift.rotate((int)0.01*10000);//van scanhoogte naar pakhoogte (1cm lager)
 							//Main.flags.setTakeBox(true);
 							//Main.flags.setDump(true);
 							// The only thing that should happen now is the robot needs to remember there is a mistake and he should fix it when he has time so mistake boolean could be set equal to true
-							LCD.clear();
+							//LCD.clear();
 							
 						}
 						if(Main.posFork.get(boxToScan-l).getColorBlock()==5)//LEEG
 						{
 //							LCD.clear();
-//							LCD.drawString(Main.currentColor, 1, 1);
+							LCD.drawString(Main.currentColor, 1, 5);
 							//LCD.drawString(""+colorCounter[rowToScan], 1, 4);
 							Main.emptyOrMistake[boxToScan-l]=1;
 							colorCounter[rowToScan]++;
 						}
-						if(Main.posFork.get(boxToScan+l).getColorBlock()==Main.posFork.get(boxToScan+l).getColorShelf() ) {
+						if(Main.posFork.get(boxToScan-l).getColorBlock()==Main.posFork.get(boxToScan-l).getColorShelf() ) {
 //							LCD.clearDisplay();
-//							LCD.drawString(Main.currentColor, 1, 3);
+							LCD.drawString(Main.currentColor, 1, 5);
 							//Delay.msDelay(5000);
 						}
 						
 					}
 					if(l<3 && (rowToScan)%2==1)
 					{
-						double[] followingSpot={Main.posFork.get(boxToScan+l+1).getCoordinates()[0],Main.posFork.get(boxToScan+l+1).getCoordinates()[1],Main.posFork.get(boxToScan+l+1).getCoordinates()[2]+0.035};
+						double[] followingSpot={Main.posFork.get(boxToScan+l+1).getCoordinates()[0],Main.posFork.get(boxToScan+l+1).getCoordinates()[1],Main.posFork.get(boxToScan+l+1).getCoordinates()[2]+0.045};
 						Main.moveFork(Main.positionFork,followingSpot);	// if the colorscanner scans to fast, add delay here
 					}
 					if(l<3 && (rowToScan)%2==0) 
 					{
-						double[] followingSpot={Main.posFork.get(boxToScan-l-1).getCoordinates()[0],Main.posFork.get(boxToScan-l-1).getCoordinates()[1],Main.posFork.get(boxToScan-l-1).getCoordinates()[2]+0.035};
+						double[] followingSpot={Main.posFork.get(boxToScan-l-1).getCoordinates()[0],Main.posFork.get(boxToScan-l-1).getCoordinates()[1],Main.posFork.get(boxToScan-l-1).getCoordinates()[2]+0.045};
 						Main.moveFork(Main.positionFork,followingSpot);
 						// if the colorscanner scans to fast, add delay here	
 					}
@@ -293,9 +305,10 @@ public class ScanRack4 implements Behavior {
 					{
 						
 						Main.colorRep=rowToScan+1;
-						LCD.drawString(Main.colorRep+"", 1, 4);
+						
 						Main.flags.setVakVol(false);
 						suppressed=true;
+						chooseColumn=true;
 						// If the colorcounter is 4, a column is empty so columns should not further be checked --> make sure the action gets interrupted
 					}
 					l++;	
@@ -310,7 +323,7 @@ public class ScanRack4 implements Behavior {
 				int boxToScan=0;
 				if(rowToScan%2==0) {boxToScan=rowToScan*4;}
 				else {boxToScan=rowToScan*4+3;}
-				double[] initialSpot={Main.posFork.get(boxToScan).getCoordinates()[0],Main.posFork.get(boxToScan).getCoordinates()[1],Main.posFork.get(boxToScan).getCoordinates()[2]+0.035};
+				double[] initialSpot={Main.posFork.get(boxToScan).getCoordinates()[0],Main.posFork.get(boxToScan).getCoordinates()[1],Main.posFork.get(boxToScan).getCoordinates()[2]+0.045};
 				Main.moveFork(Main.positionFork,initialSpot); // Now we are at the initial spot of the second row we want to scan
 				while(l<=3 &&!suppressed)
 				{
@@ -324,6 +337,7 @@ public class ScanRack4 implements Behavior {
 							// Wa is da hier allemaal?
 							LCD.drawString("Mistake detected", 1, 1);
 							Main.emptyOrMistake[boxToScan+l]=2;
+							Main.AOE++;
 							//Main.Lift.rotate((int)0.01*10000);//van scanhoogte naar pakhoogte (1cm lager)
 							//Main.flags.setTakeBox(true);
 							//Main.flags.setDump(true);
@@ -334,13 +348,13 @@ public class ScanRack4 implements Behavior {
 						if(Main.posFork.get(boxToScan+l).getColorBlock()==5)//LEEG
 						{
 //							LCD.clear();
-//							LCD.drawString(Main.currentColor, 1, 1);
+							LCD.drawString(Main.currentColor, 1, 5);
 							Main.emptyOrMistake[boxToScan+l]=1;
 							colorCounter[rowToScan]++;
 						}
 						if(Main.posFork.get(boxToScan+l).getColorBlock()==Main.posFork.get(boxToScan+l).getColorShelf() ) {
 //							LCD.clearDisplay();
-//							LCD.drawString(Main.currentColor, 1, 3);
+							LCD.drawString(Main.currentColor, 1, 5);
 							//Delay.msDelay(5000);
 						}
 						
@@ -356,6 +370,7 @@ public class ScanRack4 implements Behavior {
 							// Wa is da hier allemaal?
 							LCD.drawString("Mistake detected", 1, 1);
 							Main.emptyOrMistake[boxToScan-l]=2;
+							Main.AOE++;
 							//Main.Lift.rotate((int)0.01*10000);//van scanhoogte naar pakhoogte (1cm lager)
 							//Main.flags.setTakeBox(true);
 							//Main.flags.setDump(true);
@@ -366,25 +381,23 @@ public class ScanRack4 implements Behavior {
 						if(Main.posFork.get(boxToScan-l).getColorBlock()==5)//LEEG
 						{
 //							LCD.clear();
-//							LCD.drawString(Main.currentColor, 1, 1);
+							LCD.drawString(Main.currentColor, 1, 5);
 							Main.emptyOrMistake[boxToScan-l]=1;
 							colorCounter[rowToScan]++;
 						}
-						if(Main.posFork.get(boxToScan+l).getColorBlock()==Main.posFork.get(boxToScan+l).getColorShelf() ) {
-//							LCD.clearDisplay();
-//							LCD.drawString(Main.currentColor, 1, 3);
-							//Delay.msDelay(5000);
+						if(Main.posFork.get(boxToScan-l).getColorBlock()==Main.posFork.get(boxToScan-l).getColorShelf() ) {
+
 						}
 						
 					}
 					if(l<3 && (rowToScan)%2==0)
 					{
-						double[] followingSpot={Main.posFork.get(boxToScan+l+1).getCoordinates()[0],Main.posFork.get(boxToScan+l+1).getCoordinates()[1],Main.posFork.get(boxToScan+l+1).getCoordinates()[2]+0.035};
+						double[] followingSpot={Main.posFork.get(boxToScan+l+1).getCoordinates()[0],Main.posFork.get(boxToScan+l+1).getCoordinates()[1],Main.posFork.get(boxToScan+l+1).getCoordinates()[2]+0.045};
 						Main.moveFork(Main.positionFork,followingSpot);	// if the colorscanner scans to fast, add delay here
 					}
 					if(l<3 && (rowToScan)%2==1) 
 					{
-						double[] followingSpot={Main.posFork.get(boxToScan-l-1).getCoordinates()[0]+0.035,Main.posFork.get(boxToScan-l-1).getCoordinates()[1],Main.posFork.get(boxToScan-l-1).getCoordinates()[2]};
+						double[] followingSpot={Main.posFork.get(boxToScan-l-1).getCoordinates()[0],Main.posFork.get(boxToScan-l-1).getCoordinates()[1],Main.posFork.get(boxToScan-l-1).getCoordinates()[2]+0.045};
 						Main.moveFork(Main.positionFork,followingSpot);
 						// if the colorscanner scans to fast, add delay here	
 					}
@@ -394,6 +407,7 @@ public class ScanRack4 implements Behavior {
 						Main.colorRep=rowToScan+1;
 						Main.flags.setVakVol(false);
 						suppressed=true;
+						chooseColumn=true;
 						
 					}
 				l++;	
@@ -402,17 +416,30 @@ public class ScanRack4 implements Behavior {
 			}
 			j++;
 		}
-		// Now we are outside of the while, we can say based on the color counter which row is most empty or we can correct for a mistake if there is one
-		// First we check here where the mistake is and send this to the behavior 'fix error'
-		
-		// if there is no mistake we check which color should be taken in the repository, therefore: adapt the takeControl of goToRep: not only vakvol, choose a new boolean that says to go to the repository
-		if(colorCounter[0]!=4 &&colorCounter[1]!=4 &&colorCounter[2]!=4) {
-			
-			Main.colorRep=getIndexOfSmallest(colorCounter)+1;
+
+		//Main.flags.setVakVol(false);
+		LCD.drawString(Main.boxCounter[0]+" "+Main.boxCounter[1]+" "+Main.boxCounter[2]+" ", 1, 4);
+		LCD.drawString(Main.boxCounter[0]+" "+Main.boxCounter[1]+" "+Main.boxCounter[2]+" ", 1, 4);
+		LCD.drawString(Main.boxCounter[0]+" "+Main.boxCounter[1]+" "+Main.boxCounter[2]+" ", 1, 4);
+		LCD.drawString(Main.boxCounter[0]+" "+Main.boxCounter[1]+" "+Main.boxCounter[2]+" ", 1, 4);
+		LCD.drawString(Main.AOE+"", 1, 7);
+		if(chooseColumn==false && Main.AOE==0 )
+		{
+			Main.colorRep=getIndexOfLargest(colorCounter)+1;
+			Main.flags.setVakVol(false);
+			suppressed=true;
+			LCD.clear();
+			LCD.drawString("Red "+colorCounter[0], 1, 3);
+			LCD.drawString("Groen "+colorCounter[1], 1, 4);
+			LCD.drawString("Blauw "+colorCounter[2], 1, 5);
 		}
-		//set a specific boolean true or false
-		Main.flags.setVakVol(false);
+		else if(Main.AOE>0)
+		{
+			Main.flags.setError(true);
+			suppressed=true;
+		}
 		
+		//Main.printRack();
 	}
 		
 			
@@ -422,13 +449,6 @@ public class ScanRack4 implements Behavior {
 		suppressed = true;
 		
 	}
-
-
-// Make an array in the mainfile that counts how much boxes are taken of each color:
-
-// Each time a box is taken in go to repository: increment the corresponding color
-// The goal is now to check the rack for which most boxes are brought first
-// If each rack has at least one box --> get a box of the color that is least present
 
 public int getIndexOfLargest(int[] array)
 {
@@ -451,39 +471,4 @@ public int getIndexOfSmallest(int[] array)
 	return smallest;
 }
 }
-//package serieus1;
-//
-//import lejos.robotics.subsumption.*;
-//import lejos.hardware.motor.EV3LargeRegulatedMotor;
-//import lejos.hardware.sensor.EV3ColorSensor;
-//
-//public class ScanRek implements Behavior{
-//	private EV3ColorSensor color1;
-//	private EV3LargeRegulatedMotor Lift;
-//	private EV3LargeRegulatedMotor Grab;
-//	private EV3LargeRegulatedMotor Drive;
-//	boolean vakVol=true;
-//	
-//	public ScanRek(EV3ColorSensor c1, EV3LargeRegulatedMotor L, EV3LargeRegulatedMotor G) {
-//		// TODO Auto-generated constructor stub
-//	}
-//	
-//	//de IF
-//	public boolean takeControl(){
-//		return true;
-//	}
-//	//handeling
-//	public void action(){
-//		for(int i=1;i<=16&&vakVol;i++) {
-//			
-//		}
-//
-//	}
-//	//uitstap
-//	public void suppress(){
-//		this.suppress();
-//		
-//	}
-//	
-//
-//
+
