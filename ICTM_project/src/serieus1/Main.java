@@ -52,18 +52,18 @@ public class Main {
 		static Warehouse rack12=new Warehouse(shelf12,1,5);
 		private static double[] shelf22= {0.002,0.05,0.065};
 		static Warehouse rack22=new Warehouse(shelf22,1,5);
-		private static double[] shelf32= {0.002,0.05,0.115};
+		private static double[] shelf32= {0.002,0.05,0.110};
 		static Warehouse rack32=new Warehouse(shelf32,1,5);
 		private static double[] shelf42= {0.002,0.05,0.16};
 		static Warehouse rack42=new Warehouse(shelf42,1,5);
 		// red column
-		private static double[] shelf13= {0.105,0.05,0.01};
+		private static double[] shelf13= {0.11,0.05,0.01};
 		static Warehouse rack13=new Warehouse(shelf13,2,5);
-		private static double[] shelf23= {0.105,0.05,0.065};
+		private static double[] shelf23= {0.11,0.05,0.065};
 		static Warehouse rack23=new Warehouse(shelf23,2,5);
-		private static double[] shelf33= {0.105,0.05,0.115};
+		private static double[] shelf33= {0.11,0.05,0.115};
 		static Warehouse rack33=new Warehouse(shelf33,2,5);
-		private static double[] shelf43= {0.105,0.05,0.16};
+		private static double[] shelf43= {0.11,0.05,0.16};
 		static Warehouse rack43=new Warehouse(shelf43,2,5);
 		
 		// green column
@@ -71,7 +71,7 @@ public class Main {
 		static Warehouse rack14=new Warehouse(shelf14,3,5);
 		private static double[] shelf24= {0.21,0.05,0.065};
 		static Warehouse rack24=new Warehouse(shelf24,3,5);
-		private static double[] shelf34= {0.21,0.05,0.115};
+		private static double[] shelf34= {0.21,0.05,0.110};
 		static Warehouse rack34=new Warehouse(shelf34,3,5);
 		private static double[] shelf44= {0.21,0.05,0.16};
 		static Warehouse rack44=new Warehouse(shelf44,3,5);
@@ -116,8 +116,16 @@ public class Main {
 			double rotationDrive=(posXnew-posXold)*2000;
 			double rotationLift=(posZnew-posZold)*10000;
 
-			Main.Drive.rotate(-(int)rotationDrive);
-			Main.Lift.rotate(-(int)rotationLift);
+			//Main.Drive.rotate(-(int)rotationDrive);
+			//Main.Lift.rotate(-(int)rotationLift);
+			serieus1.Drive moveX = new Drive(-rotationDrive, Main.Drive); 
+			Thread tMoveX = new Thread(moveX); 
+			tMoveX.start();
+			serieus1.Lift moveZ = new Lift(-rotationLift, Main.Lift); 
+			Thread tMoveZ = new Thread(moveZ); 
+			tMoveZ.start();
+			while(tMoveX.isAlive() || tMoveZ.isAlive()) { //Wait for threads to finish 
+			}
 			Main.makeUpdate(0,posXnew);
 			Main.makeUpdate(2,posZnew);
 			//LCD.clear();

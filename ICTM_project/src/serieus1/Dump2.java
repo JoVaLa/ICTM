@@ -7,6 +7,7 @@ import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.subsumption.Behavior;
+import lejos.utility.Delay;
 
 public class Dump2 implements Behavior{
 	private EV3ColorSensor color1;
@@ -43,7 +44,7 @@ public class Dump2 implements Behavior{
         	suppressed=true;
     	}
 		}
-		
+		Main.makeUpdate(0, 0.31);
 		
 		
 	}

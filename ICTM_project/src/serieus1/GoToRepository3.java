@@ -6,6 +6,7 @@ import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.SampleProvider;
 import lejos.robotics.subsumption.Behavior;
+import lejos.utility.Delay;
 
 public class GoToRepository3 implements Behavior{
 //	private Flags flags;
@@ -28,9 +29,9 @@ public class GoToRepository3 implements Behavior{
 //	private double beginPos = 0;//positie waar 'BringtoRek' is opgeroepen
 //	private double startPos=0.3;//vaste afstand van dump tot startpositie rek (vakje 1 vd 16)
 	private double range=0.008;
-	private double distRrep=.435;//angle ingeven
-	private double distGrep=.555;
-	private double distBrep=.69;
+	private double distRrep=.41;//angle ingeven
+	private double distGrep=.49;
+	private double distBrep=.57;
 	//private double distWtoWall=.42;
 
 	
@@ -51,18 +52,37 @@ public class GoToRepository3 implements Behavior{
 	}
 
 	public void action(){
-		LCD.drawString("gotorep", 1, 7);
+		LCD.drawString("gotorep", 1, 1);
 		//Main.Drive.setSpeed(200);
 		LCD.drawString(Main.colorRep+"", 1, 6);
 		suppressed=false;
 		//LCD.drawString("in GoToRep", 1, 1);
-		if(Main.positionFork[0]<0.38) {
-		double[] onderKol={0.38,0,0.01};
+		if(Main.positionFork[0]<0.35) {
+		double[] onderKol={0.35,0,0.01};
 		Main.moveFork(Main.positionFork, onderKol);
+		//Delay.msDelay(2000);
 		}
 		Main.flags.setSensor(false);
 		//Main.Drive.setSpeed(200);
 		Main.boxCounter[Main.colorRep-1]++;
+		
+		boolean goalReached=false;
+		if(Main.colorRep==1)
+		{
+			while(!goalReached && !suppressed) {
+				if((Math.abs(Main.positionFork[0]-0.50)>range) && (Main.positionFork[0]-0.50)<0) {
+		        	Main.Drive.backward();
+		        	
+		        }
+		    	else if((Math.abs(Main.positionFork[0]-0.50)>range) && (Main.positionFork[0]-0.50)>0) {
+		        	Main.Drive.forward();
+		        }
+		        else {
+		        	Main.Drive.stop();
+		        	goalReached=true;
+		        }
+			}
+		}
 		
         while(!suppressed) {
         	

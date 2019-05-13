@@ -17,7 +17,7 @@ public class TakeBox2 implements Behavior{
 
 	//handeling
 	public void action(){
-		//LCD.drawString("takebox", 1, 7);
+		LCD.drawString("takebox", 1, 1);
 		Main.Drive.stop();
 		Main.Grab.setSpeed(200);
 		Main.Lift.setSpeed(200);

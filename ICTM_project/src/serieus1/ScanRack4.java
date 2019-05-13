@@ -1,5 +1,6 @@
 package serieus1;
 import lejos.hardware.lcd.LCD;
+import java.util.ArrayList;
 import lejos.robotics.SampleProvider;
 
 import lejos.robotics.subsumption.Behavior;
@@ -438,11 +439,11 @@ public class ScanRack4 implements Behavior {
 			Main.flags.setError(true);
 			suppressed=true;
 		}
-		
+		Delay.msDelay(1000);
 		//Main.printRack();
 	}
 		
-			
+		
 	
 	
 	public void suppress() {

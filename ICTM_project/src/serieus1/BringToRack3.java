@@ -36,7 +36,7 @@ public class BringToRack3 implements Behavior{
 		return (Main.flags.getBoxVast() && Main.flags.getBtr());
 	}
 	public void action(){
-		//LCD.drawString("bringtorack", 1, 7);
+		LCD.drawString("bringtorack", 1, 1);
 		Main.Lift.setSpeed(500);
 		Main.Drive.setSpeed(120);
 		if(Main.positionFork[0]>0.30) {

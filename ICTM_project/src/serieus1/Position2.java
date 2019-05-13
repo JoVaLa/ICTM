@@ -57,8 +57,8 @@ public class Position2 extends Thread {
 			}
 			else
 			{
-				if(Math.abs((1.104-positionRight-0.055-.30)-Main.positionFork[0])<0.08) {//0.05 is distance between us sensor and scanner
-				Main.makeUpdate(0,(1.104-positionRight-0.055-.30));
+				if(Math.abs((1.004-positionRight-0.055-.30)-Main.positionFork[0])<0.08) {//0.05 is distance between us sensor and scanner
+				Main.makeUpdate(0,(1.004-positionRight-0.055-.30));
 				}
 			}
 			if((positionLeft<0.05 && Main.Drive.getSpeed()>=0) || (positionRight<0.05 && Main.Drive.getSpeed()>=0))
@@ -71,7 +71,7 @@ public class Position2 extends Thread {
 			}
 			// add delay or sleep
 			//LCD.clear();
-			//LCD.drawString(" "+Main.positionFork[2], 1, 7);
+			LCD.drawString(" "+Main.positionFork[0], 1, 7);
 			//LCD.drawString(" "+positionRight, 1, 7);
 			
 		}
